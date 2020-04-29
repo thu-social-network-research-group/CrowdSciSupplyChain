@@ -1,41 +1,39 @@
 % -------------------------------------------------------------------------
-%%%³ÌĞò¹¦ÄÜ£º½¨Á¢Í¼£¨½Úµã¡¢±ß£©µÄÔª°û
-%%%³ÌĞòÊäÈë£º
-%½Úµã²ãÊıChain_layer_Num
-%%%³ÌĞòÊä³ö£º
-%Graph:¼ÇÂ¼ÍøÂçÃ¿²ãµÄ½Úµã±àºÅ
-%Arc:¼ÇÂ¼ÍøÂç±ßµÄÁ¬½Ó
+%%%ç¨‹åºåŠŸèƒ½ï¼šå»ºç«‹å›¾ï¼ˆèŠ‚ç‚¹ã€è¾¹ï¼‰çš„å…ƒèƒ
+%%%ç¨‹åºè¾“å…¥ï¼š
+%èŠ‚ç‚¹å±‚æ•°Chain_layer_Num
+%%%ç¨‹åºè¾“å‡ºï¼š
+%Graph:è®°å½•ç½‘ç»œæ¯å±‚çš„èŠ‚ç‚¹ç¼–å·
+%Arc:è®°å½•ç½‘ç»œè¾¹çš„è¿æ¥
 % -------------------------------------------------------------------------
 function [Graph,Arc] = Graph_create(Chain_layer_Num)
-%Í¼½Úµã
-Graph = cell(1,Chain_layer_Num);
-node_sum=0;    %½Úµã×ÜÊı
-node_num=zeros(1,Chain_layer_Num);   %¸÷²ã½Úµã¸öÊı
-Max_node_num=10*ones(1,Chain_layer_Num); %Ã¿Ò»²ã×î´ó½Úµã¸öÊı
-Min_node_num_=4*ones(1,Chain_layer_Num); %Ã¿Ò»²ã×îĞ¡½Úµã¸öÊı
-
-for i=1:Chain_layer_Num
-    node_num(i)=randi([Min_node_num(i),Max_node_num(i)]);    %µÚi²ãÕæÊµ½Úµã¸öÊı
-    Graph{i}=((node_sum+1):(node_sum+node_num(i)));
-    node_sum=node_sum+node_num(i);
-end
-
-%±ßÁ¬½Ó
-Arc_layer_Num=Chain_layer_Num-1;   %±ß²ãÊı
-Arc = cell(1,Arc_layer_Num);
-for i=1:Arc_layer_Num
-    Max_arc_num=length(Graph{i})*length(Graph{i+1});   %µÚi²ã×î´ó±ßÊı£¨ÉèÖÃÎªÈ«Á¬½ÓÊ±£©
-    Min_arc_num=ceil(Max_arc_num/3);     %µÚi²ã×îĞ¡±ßÊı£¨È¡ÎªÈ«Á¬½ÓµÄ1/3£¬ÏòÉÏÈ¡Õû£©
-    Arc_num(i)=randi([Min_arc_num,Max_arc_num],1);                  %µÚi²ãµÄÕæÊµ±ßÊı
-    Connect_matrix=zeros(Arc_num(i),2);  %µÚi²ãµÄÁ¬½Ó¾ØÕó(±ßÊı*2¾ØÕó)
-    for j=1:Arc_num(i)
-        Connect_matrix(j,1)=randi([Graph{i}(1),Graph{i}(1)+length(Graph{i})-1]); %Node_choose_i_layer
-        Connect_matrix(j,2)=randi([Graph{i+1}(1),Graph{i+1}(1)+length(Graph{i+1})-1],1);  %Node_choose_i+1_layer
+    %å›¾èŠ‚ç‚¹
+    Graph = cell(1,Chain_layer_Num);
+    node_sum=0;    %èŠ‚ç‚¹æ€»æ•°
+    node_num=zeros(1,Chain_layer_Num);   %å„å±‚èŠ‚ç‚¹ä¸ªæ•°
+    Max_node_num=10*ones(1,Chain_layer_Num); %æ¯ä¸€å±‚æœ€å¤§èŠ‚ç‚¹ä¸ªæ•°
+    Min_node_num_=4*ones(1,Chain_layer_Num); %æ¯ä¸€å±‚æœ€å°èŠ‚ç‚¹ä¸ªæ•°
+    
+    for i=1:Chain_layer_Num
+        node_num(i)=randi([Min_node_num(i),Max_node_num(i)]);    %ç¬¬iå±‚çœŸå®èŠ‚ç‚¹ä¸ªæ•°
+        Graph{i}=((node_sum+1):(node_sum+node_num(i)));
+        node_sum=node_sum+node_num(i);
     end
-    Arc{i}=Connect_matrix;
-end    
+    
+    %è¾¹è¿æ¥
+    Arc_layer_Num=Chain_layer_Num-1;   %è¾¹å±‚æ•°
+    Arc = cell(1,Arc_layer_Num);
+    for i=1:Arc_layer_Num
+        Max_arc_num=length(Graph{i})*length(Graph{i+1});   %ç¬¬iå±‚æœ€å¤§è¾¹æ•°ï¼ˆè®¾ç½®ä¸ºå…¨è¿æ¥æ—¶ï¼‰
+        Min_arc_num=ceil(Max_arc_num/3);     %ç¬¬iå±‚æœ€å°è¾¹æ•°ï¼ˆå–ä¸ºå…¨è¿æ¥çš„1/3ï¼Œå‘ä¸Šå–æ•´ï¼‰
+        Arc_num(i)=randi([Min_arc_num,Max_arc_num],1);                  %ç¬¬iå±‚çš„çœŸå®è¾¹æ•°
+        Connect_matrix=zeros(Arc_num(i),2);  %ç¬¬iå±‚çš„è¿æ¥çŸ©é˜µ(è¾¹æ•°*2çŸ©é˜µ)
+        for j=1:Arc_num(i)
+            Connect_matrix(j,1)=randi([Graph{i}(1),Graph{i}(1)+length(Graph{i})-1]); %Node_choose_i_layer
+            Connect_matrix(j,2)=randi([Graph{i+1}(1),Graph{i+1}(1)+length(Graph{i+1})-1],1);  %Node_choose_i+1_layer
+        end
+        Arc{i}=Connect_matrix;
+    end    
 end
-
-
-
-
+    
+    
