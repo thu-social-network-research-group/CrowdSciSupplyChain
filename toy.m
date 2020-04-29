@@ -1,3 +1,4 @@
+clc;clear;
 %图节点
 Graph = cell(1,3);
 Graph{1} = [1,2,3];%第一层节点编号
