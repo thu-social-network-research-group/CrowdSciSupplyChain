@@ -1,2 +1,2 @@
-# CrowdSciSupplyChain
- matlab simulation code for crowd science supply chain
+# R_Calculation of CrowdSciSupplyChain
+ matlab simulation code for R_Calculation of crowd science supply chain
