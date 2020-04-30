@@ -7,13 +7,13 @@
 %       Graph:记录网络每层的节点编号
 %       Arc:记录网络边的连接
 % -------------------------------------------------------------------------
-function [Graph,Arc] = Graph_create(Chain_layer_Num,CoopNum)
+function [Graph,Arc] = Graph_create(Chain_layer_Num,CoopNum,Max_node,Min_node)
     %图节点
     Graph = cell(1,Chain_layer_Num);
     node_sum=0;    %节点总数
     node_num=zeros(1,Chain_layer_Num);   %各层节点个数
-    Max_node_num =10*ones(1,Chain_layer_Num); %每一层最大节点个数                （可调）
-    Min_node_num =4*ones(1,Chain_layer_Num); %每一层最小节点个数                 （可调）
+    Max_node_num =Max_node*ones(1,Chain_layer_Num); %每一层最大节点个数                （可调）
+    Min_node_num =Min_node*ones(1,Chain_layer_Num); %每一层最小节点个数                 （可调）
     
     for i=1:Chain_layer_Num
         node_num(i)=randi([Min_node_num(i),Max_node_num(i)]);    %第i层真实节点个数

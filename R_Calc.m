@@ -6,18 +6,13 @@
 % 输入参数:连接关系、本时刻各节点弹性值，产值  
 % 输出参数:下一时刻弹性值
 % -------------------------------------------------------------------------
-function R_new = R_calc(Graph,Arc,R,V_list)
+function R_new = R_calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma)
     R_new = R;
     g = R;
-    alpha = 0.1;  %弱连接系数
-    a = 1/3; b = 1/3; c = 1/3; %产值线性组合参数
-    sigma = 0.1;  %高斯分布方差
-    gama = 10;    %调节g大小的参数
-   
     for i = 1:length(R)
         for j = 1:length(R{i})
             temp = a*V_list(Graph{i}(j))+b*calc_parents_V(Graph,Arc,V_list,i,j)+c*calc_childs_V(Graph,Arc,V_list,i,j); 
-            g{i}(j) = gama*normrnd(temp, sigma);
+            g{i}(j) = gamma*normrnd(temp, R_sigma);
             R_new{i}(j) = (1-alpha)*R{i}(j)+alpha*g{i}(j);
         end
     end   
