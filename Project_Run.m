@@ -21,7 +21,7 @@ R_sigma = 0.1;  %R高斯分布方差
 gamma = 10;    %调节g大小的参�?
 V_sigma = 0.01; %V高斯分布方差
 P_sigma = 1;  % 改变策略的概率计算中，sigmoid函数的参�?
-
+FundRate = 0.3;
 % -------------------------------------------------------------------------
 % 更新图Arc过程
 for i = 1:iteration
@@ -31,6 +31,6 @@ for i = 1:iteration
     %%%%%
     REval(i) = outputStat(R);
     P = calculateP(R, P_sigma);
-    Arc = UpdateArc(Graph, Arc, R, P, CoopNum);
+    Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate);
 end
 plot(REval);

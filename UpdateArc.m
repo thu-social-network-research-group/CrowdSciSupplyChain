@@ -1,4 +1,4 @@
-function Arc = UpdateArc(Graph, Arc, R, P,CoopNum)
+function Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate)
 %—————————————————————————————————————
 %计算网络结构更新的函数
 %输入参数为
@@ -9,6 +9,7 @@ function Arc = UpdateArc(Graph, Arc, R, P,CoopNum)
 %CoopNum:基本合作数，即每个人可以投出的合作数
 %输出参数为
 %Arc:迭代后网络边的连接
+%FundRate:基础值比例
 %———————————————开始迭代—————————————————
 LayerNum = length(Graph);%得到层数
 for i = 1 : LayerNum-1
@@ -17,12 +18,16 @@ for i = 1 : LayerNum-1
     CoopRateTh = zeros(1,length(Graph{i}));%初始化本层易合作程度
     CoopRateNt = zeros(1,length(Graph{i+1}));%初始化下层易合作程度
     %计算本层与下层的易合作程度
-    for j = 1 : length(Arc{i})
+    for j = 1 : size(Arc{i}, 1)
         temp = Arc{i}(j,2)-Graph{i+1}(1)+1;%连接的下层节点的索引
         temp2 = Arc{i}(j,1)-Graph{i}(1)+1;%连接的上层节点的索引
         CoopRateNt(temp) = CoopRateNt(temp) + R{i}(temp2);
         CoopRateTh(temp2) = CoopRateTh(temp2) + R{i+1}(temp);
     end
+    
+    %增加基础值
+    CoopRateTh = CoopRateTh + FundRate*mean(CoopRateTh);
+    CoopRateNt = CoopRateNt + FundRate*mean(CoopRateNt);
 %———————————————求解合作意愿————————————————  
     CoopWillTh = zeros(length(Graph{i}), CoopNum);%记录本层的合作意愿
     CoopWillNt = zeros(length(Graph{i+1}), CoopNum);%记录下层的合作意愿
@@ -65,7 +70,7 @@ for i = 1 : LayerNum-1
             end
             if k < CoopNum
                 %保留意愿下并未达到基本选择数
-                CoopWillNt(j,k+1:end) = Dis_Rand(Graph{i},,CoopNum-k);
+                CoopWillNt(j,k+1:end) = Dis_Rand(Graph{i},TempCRN,CoopNum-k);
             end
         else
             %重新选择意愿
@@ -84,6 +89,7 @@ for i = 1 : LayerNum-1
             end
         end
     end
-    Arc{i} = NextArc;%得到迭代后的结构
+    Arc{i} = unique(NextArc,'rows');%得到迭代后的结构
+%     unique(NextArc,'rows')
 end
 end
