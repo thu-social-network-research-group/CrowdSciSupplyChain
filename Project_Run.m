@@ -1,8 +1,9 @@
 %%项目主函�?
 %R为t时刻各节点弹性�?�，V为t时刻各节点产�?
-clc;clear all;
+clc;clear;
 iteration = 400;  % 迭代的次�?
 REval = zeros(1, iteration);
+layer_connect = zeros(iteration, 3);  % max, min, average
 Chain_layer_Num=8;    %节点层数
 CoopNum = 5; %每个节点�?大连接数k
 Max_node = 10; % 每一层最大节点个�?
@@ -31,6 +32,8 @@ for i = 1:iteration
     V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
     %%%%%
     REval(i) = outputStat(R);
+    connects = checkConnects(Arc);
+    layer_connect(i, :) = connects{1, 2};  % if want to check any layers connects, just change the connects {1, ?}
     P = calculateP(R, P_sigma);
     Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate);
     
@@ -43,4 +46,8 @@ for i = 1:iteration
         i
     end
 end
+figure
 plot(REval);
+figure
+plot(layer_connect)
+legend('Max Connects', 'Min Connects', 'Average Connects')
