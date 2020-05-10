@@ -22,6 +22,7 @@ gamma = 10;    %璋冭妭g澶у皬鐨勫弬鏁?
 V_sigma = 0.01; %V楂樻柉鍒嗗竷鏂瑰樊
 P_sigma = 1;  % 鏀瑰彉绛栫暐鐨勬鐜囪绠椾腑锛宻igmoid鍑芥暟鐨勫弬鏁?
 FundRate = 0.3;
+GraphPoint = CalGarphPoint(Graph);
 % -------------------------------------------------------------------------
 % 鏇存柊鍥続rc杩囩▼
 for i = 1:iteration
@@ -32,5 +33,14 @@ for i = 1:iteration
     REval(i) = outputStat(R);
     P = calculateP(R, P_sigma);
     Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate);
+    
+    
+    %绘图,每十次迭代绘图一次，停1s
+    if mod(i,10) == 1
+        clf
+        ShowGraph(GraphPoint, Arc);
+        pause(1)
+        i
+    end
 end
 plot(REval);
