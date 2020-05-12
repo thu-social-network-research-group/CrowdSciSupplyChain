@@ -1,13 +1,13 @@
 function GraphPoint = CalGarphPoint(Graph)
-%¼ÆËãÃ¿¸öµãÔÚÍ¼ÏñÖĞµÄÎ»ÖÃ
-%ÊäÈë£ºGraph£ºÍ¼½á¹¹
-%Êä³ö£ºGraphPoint£ºÍ¼ÔÚÍ¼ÏñÖĞµÄÎ»ÖÃ£¬¶şÎ¬Êı×é
+%è®¡ç®—æ¯ä¸ªç‚¹åœ¨å›¾åƒä¸­çš„ä½ç½®
+%è¾“å…¥ï¼šGraphï¼šå›¾ç»“æ„
+%è¾“å‡ºï¼šGraphPointï¼šå›¾åœ¨å›¾åƒä¸­çš„ä½ç½®ï¼ŒäºŒç»´æ•°ç»„
 len = length(Graph);
 PointNum = max(Graph{len});
 GraphPoint = zeros(PointNum, 2);
 temp = 1;
 for i = 1 : len
-    len2 = length(Graph{i});%±¾²ã½ÚµãÊı
+    len2 = length(Graph{i});%æœ¬å±‚èŠ‚ç‚¹æ•°
     for j = 1 : length(Graph{i})
         GraphPoint(temp, 1) = i*5;
         GraphPoint(temp, 2) = j/len2*10;

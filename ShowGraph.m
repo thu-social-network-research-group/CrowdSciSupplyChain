@@ -1,8 +1,8 @@
 function ShowGraph(GraphPoint, Arc)
-%»æÍ¼º¯Êı
-%ÊäÈë£º
-%GraphPoint£º¼ÆËãµÃµ½µÄ¸÷µãÎ»ÖÃ
-%Arc£ºÍ¼µÄÁ¬½Ó
+%ç»˜å›¾å‡½æ•°
+%è¾“å…¥ï¼š
+%GraphPointï¼šè®¡ç®—å¾—åˆ°çš„å„ç‚¹ä½ç½®
+%Arcï¼šå›¾çš„è¿æ¥
 scatter(GraphPoint(:,1),GraphPoint(:,2),'filled');
 hold on
 len1 = length(Arc);
