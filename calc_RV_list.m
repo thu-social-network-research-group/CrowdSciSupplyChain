@@ -2,9 +2,9 @@
 function [R_list,V_list] = calc_RV_list(R,V)
     R_list=[];V_list=[];
     for i = 1:length(R)
-        for j = 1:length(R{i})
-            R_list=[R_list,R{i},(j)];
-            V_list=[V_list,V{i},(j)];
-        end
+    %    for j = 1:length(R{i})
+            R_list=[R_list,R{i}];
+            V_list=[V_list,V{i}];
+   %     end
     end
 end

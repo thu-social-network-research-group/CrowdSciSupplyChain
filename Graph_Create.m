@@ -7,7 +7,7 @@
 %       Graph:记录网络每层的节点编号
 %       Arc:记录网络边的连接
 % -------------------------------------------------------------------------
-function [Graph,Arc] = Graph_create(Chain_layer_Num,CoopNum,Max_node,Min_node)
+function [Graph,Arc] = Graph_Create(Chain_layer_Num,CoopNum,Max_node,Min_node)
     %图节点
     Graph = cell(1,Chain_layer_Num);
     node_sum=0;    %节点总数
@@ -29,7 +29,7 @@ function [Graph,Arc] = Graph_create(Chain_layer_Num,CoopNum,Max_node,Min_node)
         for j = 1:length(Graph{i})
             Max_friends_Num=min(CoopNum,length(Graph{i+1}));     %每个节点最大连接数
             Min_friends_Num = ceil(0.2* Max_friends_Num);                        %每个节点最小连接数
-            friend_Num=randi([Min_friends_Num,min(Max_friends_Num)]);  
+            friend_Num=randi([Min_friends_Num,Max_friends_Num]);  
             Connect_matrix=zeros(friend_Num,2);
             Connect_matrix(:,1)=Graph{i}(j);
             friend_list = Graph{i+1};
@@ -37,6 +37,31 @@ function [Graph,Arc] = Graph_create(Chain_layer_Num,CoopNum,Max_node,Min_node)
             Connect_matrix(:,2)=real_friend_list';
             All_Connect_matrix=[All_Connect_matrix;Connect_matrix];
         end
+        next_layer_choosen_nodes=All_Connect_matrix(:,2);
+        next_list_len=length(next_layer_choosen_nodes);
+        next_every_num=zeros(1,length(Graph{i+1}));
+        delete_list=[];
+        for u=1: next_list_len
+            for t=1:length(Graph{i+1})
+                if next_layer_choosen_nodes(u)==Graph{i+1}(t)
+                    next_every_num(t)=next_every_num(t)+1;
+                    if next_every_num(t)>CoopNum
+                        delete_list=[delete_list,u];
+                        next_every_num(t)=next_every_num(t)-1;
+                    end
+                end
+            end
+        end
+        All_Connect_matrix(delete_list,:)=[];
+        
+        
+%         for t= 1: length(Graph{i+1})
+%             next_num=
+%             if sum(All_Connect_matrix==Graph{i+1}(t))>CoopNum
+%                 
+%                 
+%                 
+%             end
         Arc{i}=All_Connect_matrix;
     end
 end        
