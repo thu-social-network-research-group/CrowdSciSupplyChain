@@ -21,8 +21,10 @@ a = 1/3; b = 1/3; c = 1/3; %浜у?肩嚎鎬х粍鍚堝弬鏁?
 R_sigma = 0.1;  %R楂樻柉鍒嗗竷鏂瑰樊
 gamma = 10;    %璋冭妭g澶у皬鐨勫弬鏁?
 V_sigma = 0.01; %V楂樻柉鍒嗗竷鏂瑰樊
-P_sigma = 1;  % 鏀瑰彉绛栫暐鐨勬鐜囪绠椾腑锛宻igmoid鍑芥暟鐨勫弬鏁?
+P_sigma = 0.1;  % 鏀瑰彉绛栫暐鐨勬鐜囪绠椾腑锛宻igmoid鍑芥暟鐨勫弬鏁?
 FundRate = 0.3;
+RButton = 1;%决定是否考虑本层R值对易合作程度的影响
+DecayRate = 0.5;%衰减率
 GraphPoint = CalGarphPoint(Graph);
 % -------------------------------------------------------------------------
 % 鏇存柊鍥続rc杩囩▼
@@ -35,7 +37,8 @@ for i = 1:iteration
     connects = checkConnects(Arc);
     layer_connect(i, :) = connects{1, 2};  % if want to check any layers connects, just change the connects {1, ?}
     P = calculateP(R, P_sigma);
-    Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate);
+    Decay = CalDecay(Graph, Arc, DecayRate, CoopNum);%计算衰减率
+    Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton);%更新网络
     
     
     %绘图,每十次迭代绘图一次，停1s
