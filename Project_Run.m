@@ -5,9 +5,9 @@ iteration = 400;  % 迭代的次�?
 REval = zeros(1, iteration);
 layer_connect = zeros(iteration, 3);  % max, min, average
 Chain_layer_Num=8;    %节点层数
-CoopNum = 5; %每个节点�?大连接数k
-Max_node = 10; % 每一层最大节点个�?
-Min_node = 5;  %每一层最小节点个�?
+CoopNum = 4; %每个节点�?大连接数k
+Max_node = 15; % 每一层最大节点个�?
+Min_node = 15;  %每一层最小节点个�?
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %创建图�?�边元胞
 
 R = R_initial(Graph);   %R值初始化(按照Beta(2,5)分布)
@@ -28,6 +28,7 @@ DecayRate = 0.5;%˥����
 GraphPoint = CalGarphPoint(Graph);
 % -------------------------------------------------------------------------
 % 更新图Arc过程
+% DIS = [];
 for i = 1:iteration
     [R_list,V_list] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点R值�?�V�?(展开为长向量)
     R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);    %R值计算（更新）R(t)->R(t+1)
@@ -39,18 +40,26 @@ for i = 1:iteration
     P = calculateP(R, P_sigma);
     Decay = CalDecay(Graph, Arc, DecayRate, CoopNum);%����˥����
     Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton);%��������
-    
+    Dis = CalDis(Graph, Arc, CoopNum);
+%     DIS = [DIS mean(Dis)];
     
     %��ͼ,ÿʮ�ε�����ͼһ�Σ�ͣ1s
     if mod(i,10) == 1
+        figure(1)
+        clf
+        hist(Dis, CoopNum+1);
+        figure(2)
         clf
         ShowGraph(GraphPoint, Arc);
         pause(1)
         i
+        
     end
 end
 figure
 plot(REval);
+% hold on
+% plot(DIS);
 figure
 plot(layer_connect)
 legend('Max Connects', 'Min Connects', 'Average Connects')

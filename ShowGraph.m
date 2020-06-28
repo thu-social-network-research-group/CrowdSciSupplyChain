@@ -3,7 +3,7 @@ function ShowGraph(GraphPoint, Arc)
 %输入：
 %GraphPoint：计算得到的各点位置
 %Arc：图的连接
-scatter(GraphPoint(:,1),GraphPoint(:,2),'filled');
+scatter(GraphPoint(:,1),GraphPoint(:,2),'filled','b');
 hold on
 len1 = length(Arc);
 for i = 1 : len1
