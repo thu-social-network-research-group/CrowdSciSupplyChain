@@ -10,6 +10,15 @@ Max_node = 15; % æ¯ä¸€å±‚æœ€å¤§èŠ‚ç‚¹ä¸ªæ•?
 Min_node = 15;  %æ¯ä¸€å±‚æœ€å°èŠ‚ç‚¹ä¸ªæ•?
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %åˆ›å»ºå›¾ã?è¾¹å…ƒèƒ
 
+
+Repu = Repu_intial(Graph); %The reputation of every agent, the cooperate rate of every agent in last turn
+TP = TP_intial(Graph);%The total paypoff  of every agent
+Payoff = cell(2,2);
+Payoff{1,1} = [5,5];%agent1 and agent2 cooperate
+Payoff{1,2} = [2,8];%agent1 cooperate and agent2 defect
+Payoff{2,1} = [8,2];%agent2 cooperate and agent1 defect
+Payoff{2,2} = [3,3];%agent1 and agent2 defect
+
 R = R_initial(Graph);   %Rå€¼åˆå§‹åŒ–(æŒ‰ç…§Beta(2,5)åˆ†å¸ƒ)
 min_A = 3; max_A = 10;  %èŠ‚ç‚¹ièƒ½åŠ›ä¸Šä¸‹é™?
 V = V_initial(Graph, min_A, max_A);   %Vå€¼åˆå§‹åŒ–(æŒ‰ç…§Beta(2.5)åˆ†å¸ƒå’Œå„èŠ‚ç‚¹åˆå§‹èƒ½åŠ›å€¼çº¦æ?)
@@ -41,6 +50,7 @@ for i = 1:iteration
     Decay = CalDecay(Graph, Arc, DecayRate, CoopNum);%¼ÆËãË¥¼õÂÊ
     Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton);%¸üĞÂÍøÂç
     Dis = CalDis(Graph, Arc, CoopNum);
+    [TP, Repu Arcs] = AgentGame(Graph, Arc, Repu, TP, Payoff);
 %     DIS = [DIS mean(Dis)];
     
     %»æÍ¼,Ã¿Ê®´Îµü´ú»æÍ¼Ò»´Î£¬Í£1s
