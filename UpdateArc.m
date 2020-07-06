@@ -1,4 +1,4 @@
-function Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate)
+function Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton)
 %—————————————————————————————————————
 %计算网络结构更新的函数
 %输入参数为
@@ -7,6 +7,8 @@ function Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate)
 %R:记录各节点的R值
 %P:记录各节点的P值
 %CoopNum:基本合作数，即每个人可以投出的合作数
+%Decay:衰减率，即当节点连接数过多时，其他节点选择时倾向不选择该点
+%RButton:易合作程度是否与节点本身的R值有关，1为有关，否则无关
 %输出参数为
 %Arc:迭代后网络边的连接
 %FundRate:基础值比例
@@ -24,10 +26,19 @@ for i = 1 : LayerNum-1
         CoopRateNt(temp) = CoopRateNt(temp) + R{i}(temp2);
         CoopRateTh(temp2) = CoopRateTh(temp2) + R{i+1}(temp);
     end
+    %增加节点本身的值
+    if(RButton == 1)
+        CoopRateTh = CoopRateTh + R{i};
+        CoopRateNt = CoopRateNt + R{i+1};
+    end
+    %增加衰减率项
+    CoopRateTh = CoopRateTh.*Decay{i}(2,:);
+    CoopRateNt = CoopRateNt.*Decay{i+1}(1,:);
     
+        
     %增加基础值
-    CoopRateTh = CoopRateTh + FundRate*mean(CoopRateTh);
-    CoopRateNt = CoopRateNt + FundRate*mean(CoopRateNt);
+    CoopRateTh = CoopRateTh + FundRate*mean(CoopRateTh) + 1;
+    CoopRateNt = CoopRateNt + FundRate*mean(CoopRateNt) + 1;
 %———————————————求解合作意愿————————————————  
     CoopWillTh = zeros(length(Graph{i}), CoopNum);%记录本层的合作意愿
     CoopWillNt = zeros(length(Graph{i+1}), CoopNum);%记录下层的合作意愿
