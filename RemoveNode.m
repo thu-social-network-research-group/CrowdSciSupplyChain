@@ -41,6 +41,7 @@ while i <= length(R_new)
         count_new=count_new+1;
     end
     i = i + 1;
+    j = 1;
 end
 
 %recount
