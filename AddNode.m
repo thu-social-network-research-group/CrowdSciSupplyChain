@@ -60,9 +60,14 @@ end
 friend_Num=3;
 friend_list = Graph{K+1};
 real_friend_list = friend_list(randperm(length(Graph{K+1}),friend_Num));
-Arc{K}=[Arc{K}(1:max(find(Arc{K}==(add_node_number+1))),:);[add_node_number,real_friend_list'];Arc{i}(max(find(Arc{1}==2))+1:end,:)
-)',real_friend_list]
-Arc{1}=[Arc{1}(1:max(find(Arc{1}==2)),:);[add_node_number*ones(1,length(real_friend_list))',real_friend_list'];Arc{i}(max(find(Arc{1}==2))+1:length(Arc{1}),:)]
+%Arc{K}=[Arc{K}(1:max(find(Arc{K}==(add_node_number+1))),:);[add_node_number,real_friend_list'];Arc{i}(max(find(Arc{1}==2))+1:end,:))',real_friend_list]
+Arc{K}=[Arc{K}(1:max(find(Arc{1}==2)),:);[add_node_number*ones(1,length(real_friend_list))',real_friend_list'];Arc{K}(max(find(Arc{K}==add_node_number+1))+1:length(Arc{K}),:)];
+
+friend_list_pre = Graph{K-1};
+real_friend_list_pre = friend_list_pre(randperm(length(Graph{K-1}),friend_Num));
+for i = 1:length(real_friend_list_pre)
+    Arc{K-1}=[Arc{K-1}(1:max(find(Arc{K-1}==real_friend_list_pre(i))),:);[real_friend_list_pre(i),add_node_number];Arc{K-1}(max(find(Arc{K-1}==real_friend_list_pre(i)))+1,:length(Arc{K-1}),:)];  
+end
 
 
 %V更新

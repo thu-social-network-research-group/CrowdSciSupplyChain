@@ -36,11 +36,10 @@ for i = 1:iteration
     R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);    %R值计算（更新）R(t)->R(t+1)
     V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
     [Graph,Arc,R] = RemoveNode(Graph,Arc,R,TH);
-    for i=1:Graph{i}        %Add Node
+    for i=2:length(Graph)-1        %Add Node
         if length(Graph{i})<8)
-            [Graph,Arc,R,V,] = AddNode(Graph,Arc,R,V,Repu,TP,K)
+            [Graph,Arc,R,V,] = AddNode(Graph,Arc,R,V,Repu,TP,i);
         end
-    
     end
     %%%%%
     REval(i) = outputStat(R);
