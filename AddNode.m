@@ -9,7 +9,7 @@
 %       Arc:记录网络边的连接
 
 % -------------------------------------------------------------------------
-function [Graph_new,Arc_new,R_new,V_new] = AddNode(Graph,Arc,R,K)
+function [Graph_new,Arc_new,R_new,V_new,Repu_new,Tp_new] = AddNode(Graph,Arc,R,V,Repu,TP,K)
 
 alpha = 0.1;  %弱连接系数
 a = 1/3; b = 1/3; c = 1/3; %产量线性组合参数
@@ -55,6 +55,15 @@ for i = K-1 : length(Arc)
         end
     end
 end
+
+
+friend_Num=3;
+friend_list = Graph{K+1};
+real_friend_list = friend_list(randperm(length(Graph{K+1}),friend_Num));
+Arc{K}=[Arc{K}(1:max(find(Arc{K}==(add_node_number+1))),:);[add_node_number,real_friend_list'];Arc{i}(max(find(Arc{1}==2))+1:end,:)
+)',real_friend_list]
+Arc{1}=[Arc{1}(1:max(find(Arc{1}==2)),:);[add_node_number*ones(1,length(real_friend_list))',real_friend_list'];Arc{i}(max(find(Arc{1}==2))+1:length(Arc{1}),:)]
+
 
 %V更新
 V{K}=[V{K}(1:start_flag),New_node_V,V{K}(start_flag+1:length(Graph{K}))];

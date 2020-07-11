@@ -15,6 +15,7 @@ R = R_initial(Graph);   %R值初始化(按照Beta(2,5)分布)
 min_A = 3; max_A = 10;  %节点i能力上下界
 V = V_initial(Graph, min_A, max_A);   %V值初始化(按照Beta(2.5)分布和各节点初始能力值初始化)
 
+
 %R(t+1)=(1-alpha)R(t)+alpha*g(V(t),Vu(t),Vd(t))
 %g()~N((a*V+b*Vu+c*Vd),0.1)
 alpha = 0.1;  %弱连接系数
@@ -35,6 +36,12 @@ for i = 1:iteration
     R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);    %R值计算（更新）R(t)->R(t+1)
     V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
     [Graph,Arc,R] = RemoveNode(Graph,Arc,R,TH);
+    for i=1:Graph{i}        %Add Node
+        if length(Graph{i})<8)
+            [Graph,Arc,R,V,] = AddNode(Graph,Arc,R,V,Repu,TP,K)
+        end
+    
+    end
     %%%%%
     REval(i) = outputStat(R);
     connects = checkConnects(Arc);
