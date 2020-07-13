@@ -1,12 +1,12 @@
-%function [Graph_new,Arc_new,R_new,Repu_new,TP_new] = RemoveNode(Graph,Arc,R,Repu,TP,TH)
-function [Graph_new,Arc_new,R_new] = RemoveNode(Graph,Arc,R,TH)
+function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new] = RemoveNode(Graph,Arc,R,V,Repu,TP,TH)
 %This function aims to remove those node with little R(R<TH)
 %TH is the THRESHOLD
 Graph_new=Graph;
 Arc_new=Arc;
 R_new=R;
-%Repu_new=Repu;
-%TP_new=TP;
+V_new=V;
+Repu_new=Repu;
+TP_new=TP;
 count=1;
 count_new=1;
 
@@ -17,10 +17,11 @@ while i <= length(R_new)
     while j <= length(R_new{i})
         if R_new{i}(j)<TH
             R_new{i}(j)=[];
+            V_new{i}(j)=[];
             temp = Graph_new{i}(j);
             Graph_new{i}(j)=[];
-%           Repu_new(:,count)=66666;
-%           TP_new(:,count)=77777;
+            Repu_new(:,count)=66666;
+            TP_new(:,count)=77777;
             if i==1
                 [remove_Arc_row,~]=find(Arc_new{i}==temp);
                 Arc_new{i}(remove_Arc_row,:)=[];
@@ -43,6 +44,9 @@ while i <= length(R_new)
     i = i + 1;
     j = 1;
 end
+
+Repu_new(:,Repu_new(1,:) == 66666)=[];
+TP_new(TP_new(1,:) == 77777) = [];
 
 %recount
 count_new=0;
