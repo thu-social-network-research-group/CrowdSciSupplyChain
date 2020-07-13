@@ -1,4 +1,4 @@
-function [TP, Repu Arcs] = AgentGame(Graph, Arc, Repu, TP, Payoff)
+function [TP, Repu Arcs] = AgentGamePure(Graph, Arc, Repu, TP, Payoff)
 LayerNum = length(Graph);
 Arcs = Arc;%record the state of every Arc
 ArcState = [1,2
@@ -13,7 +13,7 @@ for i = 1 : LayerNum - 1
         agent1 = Arc{i}(j,1);
         agent2 = Arc{i}(j,2);
         %Generate the policy
-        if(rand(1) < Repu0(1, agent2))
+        if(Repu0(1, agent2) >= 0.5)
             agent1Policy = 1;%cooperate
             Repu(2, agent1) = Repu(2, agent1) + 1;%update the Repu
         else
@@ -21,7 +21,7 @@ for i = 1 : LayerNum - 1
             Repu(3, agent1) = Repu(3, agent1) + 1;
         end
         
-        if(rand(1) < Repu0(1, agent1))
+        if( Repu0(1, agent1) >= 0.5)
             agent2Policy = 1;%cooperate
             Repu(2, agent2) = Repu(2, agent2) + 1;
         else

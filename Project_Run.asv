@@ -1,9 +1,9 @@
 %%椤圭洰涓诲嚱鏁?
 %R涓簍鏃跺埢鍚勮妭鐐瑰脊鎬у?硷紝V涓簍鏃跺埢鍚勮妭鐐逛骇鍊?
 clc;clear;
-iteration = 2000;  % 杩唬鐨勬鏁?
+iteration = 400;  % 杩唬鐨勬鏁?
 Chain_layer_Num=8;    %鑺傜偣灞傛暟
-CoopNum = 5; %姣忎釜鑺傜偣鏈?澶ц繛鎺ユ暟k
+CoopNum = 4; %姣忎釜鑺傜偣鏈?澶ц繛鎺ユ暟k
 Max_node = 15; % 姣忎竴灞傛渶澶ц妭鐐逛釜鏁?
 Min_node = 15;  %姣忎竴灞傛渶灏忚妭鐐逛釜鏁?
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %鍒涘缓鍥俱?佽竟鍏冭優
@@ -40,9 +40,8 @@ DecayRate = 0.5;%衰减率
 %%%更改部分%%%
 REval = zeros(iteration, 4);
 layer_connect = zeros(iteration, 4);  % max, min, average, variance
-CoopRate = zeros(iteration, 1);
+BetrayRate = zeros(iteration, 1);
 ArcTypeRate = zeros(iteration, 3);
-MeanTP = zeros(iteration, 1);
 %%%更改部分%%%
 
 
@@ -53,7 +52,13 @@ for i = 1:iteration
     %%%%%
     
     
-
+    %%%更改部分%%%
+    REval(i, :) = outputStat(R);
+    layer_connect(i, :) = checkConnectsAll(Arc);
+    BetrayRate(i) = mean(Repu(1, :));
+%     connects = checkConnects(Arc);
+%     layer_connect(i, :) = connects{1, 2};  % if want to check any layers connects, just change the connects {1, ?}
+    %%%更改部分%%%
     
     
     P = calculateP(R, P_sigma);
@@ -62,18 +67,6 @@ for i = 1:iteration
     Dis = CalDis(Graph, Arc, CoopNum);
     [TP, Repu Arcs] = AgentGame(Graph, Arc, Repu, TP, Payoff);
 %     DIS = [DIS mean(Dis)];
-
-
-    %%%更改部分---位置更改至迭代计算后
-    REval(i, :) = outputStat(R);
-    layer_connect(i, :) = checkConnectsAll(Arc);
-    CoopRate(i) = mean(Repu(1, :));
-    ArcTypeRate(i, :) = CalArcTypeRate(Arcs);
-    MeanTP(i) = sum(TP);
-%     connects = checkConnects(Arc);
-%     layer_connect(i, :) = connects{1, 2};  % if want to check any layers connects, just change the connects {1, ?}
-    %%%更改部分%%%
-    
     
     %绘图,每十次迭代绘图一次，停1s
     if mod(i,10) == 1
@@ -100,7 +93,7 @@ end
 %%%%更改部分%%%%
 figure
 plot(REval(:,1:3));
-legend('Average R', 'Max R', 'Min R')
+legend('Max R', 'Min R', 'Average R')
 figure
 plot(REval(:,4));
 legend('Variance')
@@ -109,14 +102,5 @@ legend('Variance')
 figure
 plot(layer_connect)
 legend('Max Connects', 'Min Connects', 'Average Connects', 'Variance')
-figure
-plot(CoopRate)
-legend('CooperateRate')
-figure
-plot(ArcTypeRate)
-legend('Both cooperate', 'One cooperate and one defect', 'Both defect')
-figure
-plot(diff(MeanTP))
-legend('Total payoff every turn')
 %%%%更改部分%%%%
 
