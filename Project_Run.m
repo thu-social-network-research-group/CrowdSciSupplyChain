@@ -2,6 +2,7 @@
 %R为t时刻各节点弹性值，V为t时刻各节点产值
 clc;clear;
 iteration = 400;  % 迭代的次数
+TH=2;%节点被去除的R值阈值
 REval = zeros(1, iteration);
 layer_connect = zeros(iteration, 3);  % max, min, average
 Chain_layer_Num=8;    %节点层数
@@ -21,6 +22,7 @@ Payoff{2,2} = [3,3];%agent1 and agent2 defect
 R = R_initial(Graph);   %R值初始化(按照Beta(2,5)分布)
 min_A = 3; max_A = 10;  %节点i能力上下界
 V = V_initial(Graph, min_A, max_A);   %V值初始化(按照Beta(2.5)分布和各节点初始能力值初始化)
+
 
 %R(t+1)=(1-alpha)R(t)+alpha*g(V(t),Vu(t),Vd(t))
 %g()~N((a*V+b*Vu+c*Vd),0.1)
@@ -46,6 +48,7 @@ for i = 1:iteration
     for ii=1:length(Graph)-1        %Add Node
         if length(Graph{ii}) < 5
             [Graph,Arc,R,V,Repu,TP] = AddNode(Graph,Arc,R,V,Repu,TP,ii);
+
         end
     end
     %%%%%

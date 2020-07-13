@@ -18,6 +18,7 @@ gamma = 10;    %调节g大小的参数
 V_sigma = 0.01; %V高斯分布方差
 
 
+
 New_node_R_initial = betarnd(2,5);
 New_node_V_initial = betarnd(2,5)*randi([3,10]);   
 New_node_V = normrnd(New_node_V_initial, 0.1);
@@ -86,6 +87,7 @@ else
     V{K} = [V{K}(1:start_flag), New_node_V, V{K}(start_flag+1:end)];
     R{K} = [R{K}(1:start_flag), New_node_R_initial, R{K}(start_flag+1:end)];
 end
+
 [R_list,V_list] = calc_RV_list(R,V) ;
 R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
 
@@ -95,3 +97,4 @@ R_new=R;
 V_new=V;
 end
 
+ 
