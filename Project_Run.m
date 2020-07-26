@@ -1,21 +1,22 @@
 %%é¡¹ç›®ä¸»å‡½æ•?
 %Rä¸ºtæ—¶åˆ»å„èŠ‚ç‚¹å¼¹æ€§å?¼ï¼ŒVä¸ºtæ—¶åˆ»å„èŠ‚ç‚¹äº§å€?
 clc;clear;
-iteration = 2000;  % è¿­ä»£çš„æ¬¡æ•?
+iteration = 500;  % è¿­ä»£çš„æ¬¡æ•?
 Chain_layer_Num=8;    %èŠ‚ç‚¹å±‚æ•°
 CoopNum = 5; %æ¯ä¸ªèŠ‚ç‚¹æœ?å¤§è¿æ¥æ•°k
-Max_node = 15; % æ¯ä¸€å±‚æœ€å¤§èŠ‚ç‚¹ä¸ªæ•?
-Min_node = 15;  %æ¯ä¸€å±‚æœ€å°èŠ‚ç‚¹ä¸ªæ•?
+Max_node = 18; % æ¯ä¸€å±‚æœ€å¤§èŠ‚ç‚¹ä¸ªæ•?
+Min_node = 14;  %æ¯ä¸€å±‚æœ€å°èŠ‚ç‚¹ä¸ªæ•?
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %åˆ›å»ºå›¾ã?è¾¹å…ƒèƒ
 
 
-Repu = Repu_intial(Graph); %The reputation of every agent, the cooperate rate of every agent in last turn
+Repu = Repu_intial2(Graph); %The reputation of every agent, the cooperate rate of every agent in last turn
 TP = TP_intial(Graph);%The total paypoff  of every agent
+
 Payoff = cell(2,2);
-Payoff{1,1} = [5,5];%agent1 and agent2 cooperate
-Payoff{1,2} = [2,8];%agent1 cooperate and agent2 defect
-Payoff{2,1} = [8,2];%agent2 cooperate and agent1 defect
-Payoff{2,2} = [3,3];%agent1 and agent2 defect
+Payoff{1,1} = [6,6];%agent1 and agent2 cooperate
+Payoff{1,2} = [2,10];%agent1 cooperate and agent2 defect
+Payoff{2,1} = [10,2];%agent2 cooperate and agent1 defect
+Payoff{2,2} = [4,4];%agent1 and agent2 defect
 
 R = R_initial(Graph);   %Rå€¼åˆå§‹åŒ–(æŒ‰ç…§Beta(2,5)åˆ†å¸ƒ)
 min_A = 3; max_A = 10;  %èŠ‚ç‚¹ièƒ½åŠ›ä¸Šä¸‹é™?
@@ -32,6 +33,8 @@ P_sigma = 0.1;  % æ”¹å˜ç­–ç•¥çš„æ¦‚ç‡è®¡ç®—ä¸­ï¼Œsigmoidå‡½æ•°çš„å‚æ•?
 FundRate = 0.3;
 RButton = 1;%¾ö¶¨ÊÇ·ñ¿¼ÂÇ±¾²ãRÖµ¶ÔÒ×ºÏ×÷³Ì¶ÈµÄÓ°Ïì
 DecayRate = 0.5;%Ë¥¼õÂÊ
+gama = 0.7;%The decay rate of Repu
+GreedAgentRate = 0.2;%The rate of greed agent
 % -------------------------------------------------------------------------
 % æ›´æ–°å›¾Arcè¿‡ç¨‹
 % DIS = [];
@@ -42,7 +45,8 @@ REval = zeros(iteration, 4);
 layer_connect = zeros(iteration, 4);  % max, min, average, variance
 CoopRate = zeros(iteration, 1);
 ArcTypeRate = zeros(iteration, 3);
-MeanTP = zeros(iteration, 1);
+MeanTP = zeros(iteration, 3);
+AgentLabel = AgentLabel_intial(Graph, GreedAgentRate);%The label of the agent to show whether it is greed agent
 %%%¸ü¸Ä²¿·Ö%%%
 
 
@@ -60,7 +64,7 @@ for i = 1:iteration
     Decay = CalDecay(Graph, Arc, DecayRate, CoopNum);%¼ÆËãË¥¼õÂÊ
     Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton);%¸üĞÂÍøÂç
     Dis = CalDis(Graph, Arc, CoopNum);
-    [TP, Repu Arcs] = AgentGame(Graph, Arc, Repu, TP, Payoff);
+    [TP, Repu Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel);
 %     DIS = [DIS mean(Dis)];
 
 
@@ -69,7 +73,9 @@ for i = 1:iteration
     layer_connect(i, :) = checkConnectsAll(Arc);
     CoopRate(i) = mean(Repu(1, :));
     ArcTypeRate(i, :) = CalArcTypeRate(Arcs);
-    MeanTP(i) = sum(TP);
+    MeanTP(i, 1) = mean(TP);
+    MeanTP(i, 2) = mean(TP(find(AgentLabel == 1)));
+    MeanTP(i, 3) = mean(TP(find(AgentLabel == 2)));
 %     connects = checkConnects(Arc);
 %     layer_connect(i, :) = connects{1, 2};  % if want to check any layers connects, just change the connects {1, ?}
     %%%¸ü¸Ä²¿·Ö%%%
@@ -117,6 +123,6 @@ plot(ArcTypeRate)
 legend('Both cooperate', 'One cooperate and one defect', 'Both defect')
 figure
 plot(diff(MeanTP))
-legend('Total payoff every turn')
+legend('Mean payoff', 'Mean payoff of ordinary agent', 'Mean payoff of greed agent')
 %%%%¸ü¸Ä²¿·Ö%%%%
 

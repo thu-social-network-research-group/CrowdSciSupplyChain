@@ -13,7 +13,7 @@ for i = 1 : LayerNum - 1
         agent1 = Arc{i}(j,1);
         agent2 = Arc{i}(j,2);
         %Generate the policy
-        if(Repu0(1, agent2) >= 0.5)
+        if(Repu0(1, agent2) > 0.5)
             agent1Policy = 1;%cooperate
             Repu(2, agent1) = Repu(2, agent1) + 1;%update the Repu
         else
@@ -21,7 +21,7 @@ for i = 1 : LayerNum - 1
             Repu(3, agent1) = Repu(3, agent1) + 1;
         end
         
-        if( Repu0(1, agent1) >= 0.5)
+        if( Repu0(1, agent1) > 0.5)
             agent2Policy = 1;%cooperate
             Repu(2, agent2) = Repu(2, agent2) + 1;
         else
@@ -36,6 +36,7 @@ for i = 1 : LayerNum - 1
         
     end
     
+end
     for i = 1 : AgentNum
         NumOfArc = Repu(2, i) + Repu(3, i); %The Arc number of the agent
         if(NumOfArc == 0)
@@ -44,4 +45,3 @@ for i = 1 : LayerNum - 1
             Repu(1, i) = Repu(2, i)/NumOfArc;
         end
     end
-end

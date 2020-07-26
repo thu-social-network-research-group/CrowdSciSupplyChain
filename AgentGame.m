@@ -35,7 +35,7 @@ for i = 1 : LayerNum - 1
         Arcs{i}(j,3) = ArcState(agent1Policy, agent2Policy);
         
     end
-    
+end
     for i = 1 : AgentNum
         NumOfArc = Repu(2, i) + Repu(3, i); %The Arc number of the agent
         if(NumOfArc == 0)
@@ -44,4 +44,3 @@ for i = 1 : LayerNum - 1
             Repu(1, i) = Repu(2, i)/NumOfArc;
         end
     end
-end
