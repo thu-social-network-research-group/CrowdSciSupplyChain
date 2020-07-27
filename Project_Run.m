@@ -41,7 +41,7 @@ GreedAgentRate = 0.2;%The rate of greed agent
 
 
 %%%更改部分%%%
-REval = zeros(iteration, 4);
+REval = zeros(iteration, 6);
 layer_connect = zeros(iteration, 4);  % max, min, average, variance
 CoopRate = zeros(iteration, 1);
 ArcTypeRate = zeros(iteration, 3);
@@ -106,7 +106,9 @@ end
 %%%%更改部分%%%%
 figure
 plot(REval(:,1:3));
-legend('Average R', 'Max R', 'Min R')
+hold on
+plot(REval(:,5:6));
+legend('Average R', 'Max R', 'Min R', '10%R', '90%R');
 figure
 plot(REval(:,4));
 legend('Variance')

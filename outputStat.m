@@ -18,5 +18,6 @@ function REval = outputStat(R)
     RMax = max(R0);
     RMin = min(R0);
     RVar = var(R0);
-    REval = [RAvg RMax RMin RVar];
+    RDistribution = prctile(R0,[10,90]);
+    REval = [RAvg RMax RMin RVar RDistribution];
 end
