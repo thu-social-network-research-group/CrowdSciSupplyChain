@@ -1,4 +1,4 @@
-function [TP, Repu Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel)
+function [TP,payoff_one_turn, Repu, Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel)
 %gama:Repu衰减系数
 %AgentLabel:用户类型记录
 %GreedRate：贪婪用户决策时的倾向比例
@@ -9,6 +9,7 @@ ArcState = [1,2
     3,4];
 Repu0 = Repu;%The Repu of last turn
 Repu = Repu*gama;
+payoff_one_turn = zeros(1, length(TP));
 AgentNum = size(Repu, 2);
 GreedRate = 0.2;%贪婪策略程度
 %The game of every arc
@@ -58,6 +59,8 @@ for i = 1 : LayerNum - 1
         
         TP(agent1) = TP(agent1) + BusinessRate*Payoff{agent1Policy, agent2Policy}(1);
         TP(agent2) = TP(agent2) + BusinessRate*Payoff{agent1Policy, agent2Policy}(2);
+        payoff_one_turn(agent1) = BusinessRate*Payoff{agent1Policy, agent2Policy}(1);
+        payoff_one_turn(agent2) = BusinessRate*Payoff{agent1Policy, agent2Policy}(2);
         
         Arcs{i}(j,3) = ArcState(agent1Policy, agent2Policy);
         
