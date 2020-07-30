@@ -6,7 +6,7 @@
 % 输入参数:连接关系、本时刻各节点弹性值R，产值V
 % 输出参数:下一时刻弹性值
 % -------------------------------------------------------------------------
-function R_new = R_calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma)
+function R_new = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma)
     R_new = R;
     g = R;
     for i = 1:length(R)
