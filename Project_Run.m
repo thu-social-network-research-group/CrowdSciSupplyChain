@@ -40,15 +40,14 @@ GraphPoint = CalGarphPoint(Graph);
 % 更新图Arc过程
 % DIS = [];
 for i = 1:iteration
-    [R_list,V_list] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点R值�?�V�?(展开为长向量)
+    [~,V_list] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点R值�?�V�?(展开为长向量)
     R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);    %R值计算（更新）R(t)->R(t+1)
     V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
     [Graph,Arc,R,V,Repu,TP] = RemoveNode(Graph,Arc,R,V,Repu,TP,3);
-
-    for ii=1:length(Graph)-1        %Add Node
+    [R_list,V_list] = calc_RV_list(R,V) ; 
+    for ii=2:length(Graph)-1        %Add Node
         if length(Graph{ii}) < 5
             [Graph,Arc,R,V,Repu,TP] = AddNode(Graph,Arc,R,V,Repu,TP,ii);
-
         end
     end
     %%%%%

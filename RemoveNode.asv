@@ -72,10 +72,8 @@ for i=1:length(Graph_new)
         end
     end
 end
-%%%%暂时的解决方法
-if length(Arc_new)==8
-    Arc_new{7}(:,2) = Arc_new{8}(:,2);
-    Arc_new(8)=[];
-end
+%Arc_new{7}(=
+Arc_new{7}(:,2) = Arc_new{8}(:,2);
+Arc
 
 end
