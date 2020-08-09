@@ -1,4 +1,4 @@
-%%·µ»ØGraph{i}(j)¸¸½ÚµãµÄ×Ü²úÖµ
+%%è¿”å›žGraph{i}(j)çˆ¶èŠ‚ç‚¹çš„æ€»äº§å€¼
 function partition = calc_parents_V(Graph,Arc,V_list,i,j)
     if i==1
         sum_parents_V = 0;
