@@ -9,7 +9,7 @@
 %       Arc:记录网络边的连接
 
 % -------------------------------------------------------------------------
-function [Graph_new,Arc_new,R_new,V_new,Repu_new,Tp_new] = AddNode(Graph,Arc,R,V,Repu,TP,K)
+function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new,AgentLabel_new] = AddNode(Graph,Arc,R,V,Repu,TP,AgentLabel,GreedAgentRate,K)
 
 alpha = 0.1;  %弱连接系数
 a = 1/3; b = 1/3; c = 1/3; %产量线性组合参数
@@ -22,19 +22,25 @@ V_sigma = 0.01; %V高斯分布方差
 New_node_R_initial = betarnd(2,5);
 New_node_V_initial = betarnd(2,5)*randi([3,10]);   
 New_node_V = normrnd(New_node_V_initial, 0.1);
-
+New_node_AgentLabel=1;
+if(rand(1) < GreedAgentRate)
+    New_node_AgentLabel = 2;
+end
 start_flag = randi([1,length(Graph{K})]);  % insert after No.start_flag 
 add_node_number = Graph{K}(start_flag)+1;
 
-%%Repu, TP update
+%%Repu, TP,  AgentLabel update
 Repu_new = Repu;
 TP_new = TP;
+AgentLabel_new=AgentLabel;
+
 if add_node_number == length(Repu_new)
     Repu_new = [Repu_new,zeros(3,1)];
     TP_new = [TP_new,0];
 else
-    Repu_new = [Repu_new(:,1:add_node_number),zeros(3,1), Repu_new(:,add_node_number+1:end)];
-    TP_new = [TP_new(1:add_node_number),0,TP_new(add_node_number+1:end)];
+    Repu_new = [Repu_new(:,1:add_node_number-1),zeros(3,1), Repu_new(:,add_node_number:end)];   %%%%%%%
+    TP_new = [TP_new(1:add_node_number-1),0,TP_new(add_node_number:end)];
+    AgentLabel_new=[AgentLabel_new(1:add_node_number-1),New_node_AgentLabel,AgentLabel_new(add_node_number:end)];
 end
 
 %%Graph update
@@ -89,7 +95,7 @@ else
 end
 
 [R_list,V_list] = calc_RV_list(R,V) ;
-R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
+R = R_Calc2(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
 
 Graph_new=Graph;
 Arc_new=Arc;

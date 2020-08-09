@@ -1,4 +1,4 @@
-function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new] = RemoveNode(Graph,Arc,R,V,Repu,TP,TH)
+function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new,AgentLabel_new] = RemoveNode(Graph,Arc,R,V,Repu,TP,AgentLabel,TH)
 %This function aims to remove those node with little R(R<TH)
 %TH is the THRESHOLD
 Graph_new=Graph;
@@ -7,6 +7,7 @@ R_new=R;
 V_new=V;
 Repu_new=Repu;
 TP_new=TP;
+AgentLabel_new=AgentLabel;
 count=1;
 count_new=1;
 
@@ -22,6 +23,7 @@ while i <= length(R_new)
             Graph_new{i}(j)=[];
             Repu_new(:,count)=66666;
             TP_new(:,count)=77777;
+            AgentLabel_new(:,count)=88888;
             if i==1
                 [remove_Arc_row,~]=find(Arc_new{i}==temp);
                 Arc_new{i}(remove_Arc_row,:)=[];
@@ -45,8 +47,10 @@ while i <= length(R_new)
     j = 1;
 end
 
+%Repu,TP,AgentLabel's final Removal
 Repu_new(:,Repu_new(1,:) == 66666)=[];
 TP_new(TP_new(1,:) == 77777) = [];
+AgentLabel_new(AgentLabel_new(1,:) == 88888) = [];
 
 %recount
 count_new=0;
