@@ -7,7 +7,7 @@ CoopNum = 5; %每个节点最大连接数k
 Max_node = 14; % 每一层最大节点个数
 Min_node = 14;  %每一层最小节点个数
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %创建图与边元胞
-R_TH=0.001;   %%如果R小于R_TH，将被删除
+R_TH=1;   %%如果R小于R_TH，将被删除
 
 
 Repu = Repu_intial2(Graph); %The reputation of every agent, the cooperate rate of every agent in last turn
@@ -59,7 +59,7 @@ for i = 1:iteration
     [R_list,~] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点展开R为长向量
     
     %%%% Remove Node
-    if i>20
+    if i>40
          [Graph,Arc,R,V,Repu,TP,AgentLabel] = RemoveNode(Graph,Arc,R,V,Repu,TP,AgentLabel,R_TH);   %%去点
     end
    
