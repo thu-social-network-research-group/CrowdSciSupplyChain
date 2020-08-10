@@ -1,4 +1,4 @@
-function [TP,payoff_one_turn, Repu, Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel)
+function [TP, Repu Arcs] = AgentGame3(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel)
 %gama:Repu衰减系数
 %AgentLabel:用户类型记录
 %GreedRate：贪婪用户决策时的倾向比例
@@ -9,7 +9,6 @@ ArcState = [1,2
     3,4];
 Repu0 = Repu;%The Repu of last turn
 Repu = Repu*gama;
-payoff_one_turn = zeros(1, length(TP));
 AgentNum = size(Repu, 2);
 GreedRate = 0.2;%贪婪策略程度
 %The game of every arc
@@ -23,44 +22,42 @@ for i = 1 : LayerNum - 1
         if(AgentLabel(agent1) == 1)
             if(rand(1) < Repu0(1, agent2))
                 agent1Policy = 1;%cooperate
-                Repu(2, agent1) = Repu(2, agent1) + 1;%update the Repu
+                Repu(2, agent1) = Repu(2, agent1) + BusinessRate;%update the Repu
             else
                 agent1Policy = 2;%defect
-                Repu(3, agent1) = Repu(3, agent1) + 1;
+                Repu(3, agent1) = Repu(3, agent1) + BusinessRate;
             end
         elseif(AgentLabel(agent1) == 2)
             %对于贪婪用户，当Business较大时，倾向于选择背叛，反之倾向于合作
             if(rand(1) < Repu0(1, agent2) - GreedRate*(BusinessRate - 1))
                 agent1Policy = 1;%cooperate
-                Repu(2, agent1) = Repu(2, agent1) + 1;%update the Repu
+                Repu(2, agent1) = Repu(2, agent1) + BusinessRate;%update the Repu
             else
                 agent1Policy = 2;%defect
-                Repu(3, agent1) = Repu(3, agent1) + 1;
+                Repu(3, agent1) = Repu(3, agent1) + BusinessRate;
             end
         end
         
         if(AgentLabel(agent2) == 1)
             if(rand(1) < Repu0(1, agent1))
                 agent2Policy = 1;%cooperate
-                Repu(2, agent2) = Repu(2, agent2) + 1;
+                Repu(2, agent2) = Repu(2, agent2) + BusinessRate;
             else
                 agent2Policy = 2;%defect
-                Repu(3, agent2) = Repu(3, agent2) + 1;
+                Repu(3, agent2) = Repu(3, agent2) + BusinessRate;
             end
         elseif(AgentLabel(agent2) == 2)
             if(rand(1) < Repu0(1, agent1) - GreedRate*(BusinessRate - 1))
                 agent2Policy = 1;%cooperate
-                Repu(2, agent2) = Repu(2, agent2) + 1;
+                Repu(2, agent2) = Repu(2, agent2) + BusinessRate;
             else
                 agent2Policy = 2;%defect
-                Repu(3, agent2) = Repu(3, agent2) + 1;
+                Repu(3, agent2) = Repu(3, agent2) + BusinessRate;
             end
         end
         
         TP(agent1) = TP(agent1) + BusinessRate*Payoff{agent1Policy, agent2Policy}(1);
         TP(agent2) = TP(agent2) + BusinessRate*Payoff{agent1Policy, agent2Policy}(2);
-        payoff_one_turn(agent1) = BusinessRate*Payoff{agent1Policy, agent2Policy}(1);
-        payoff_one_turn(agent2) = BusinessRate*Payoff{agent1Policy, agent2Policy}(2);
         
         Arcs{i}(j,3) = ArcState(agent1Policy, agent2Policy);
         

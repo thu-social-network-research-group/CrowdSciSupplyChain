@@ -1,4 +1,4 @@
-%初始化节点的弹�?��??
+%初始化节点的弹性值
 function R = R_initial(Graph)
 R = Graph;
 for i = 1:length(Graph)
