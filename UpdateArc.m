@@ -1,95 +1,106 @@
-function Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate)
-%â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
-%è®¡ç®—ç½‘ç»œç»“æ„æ›´æ–°çš„å‡½æ•°
-%è¾“å…¥å‚æ•°ä¸º
-%Graph:è®°å½•ç½‘ç»œæ¯å±‚çš„èŠ‚ç‚¹ç¼–å·
-%Arc:è®°å½•ç½‘ç»œè¾¹çš„è¿æ¥
-%R:è®°å½•å„èŠ‚ç‚¹çš„Rå€¼
-%P:è®°å½•å„èŠ‚ç‚¹çš„På€¼
-%CoopNum:åŸºæœ¬åˆä½œæ•°ï¼Œå³æ¯ä¸ªäººå¯ä»¥æŠ•å‡ºçš„åˆä½œæ•°
-%è¾“å‡ºå‚æ•°ä¸º
-%Arc:è¿­ä»£åç½‘ç»œè¾¹çš„è¿æ¥
-%FundRate:åŸºç¡€å€¼æ¯”ä¾‹
-%â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”å¼€å§‹è¿­ä»£â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
-LayerNum = length(Graph);%å¾—åˆ°å±‚æ•°
+function Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton)
+%¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
+%¼ÆËãÍøÂç½á¹¹¸üĞÂµÄº¯Êı
+%ÊäÈë²ÎÊıÎª
+%Graph:¼ÇÂ¼ÍøÂçÃ¿²ãµÄ½Úµã±àºÅ
+%Arc:¼ÇÂ¼ÍøÂç±ßµÄÁ¬½Ó
+%R:¼ÇÂ¼¸÷½ÚµãµÄRÖµ
+%P:¼ÇÂ¼¸÷½ÚµãµÄPÖµ
+%CoopNum:»ù±¾ºÏ×÷Êı£¬¼´Ã¿¸öÈË¿ÉÒÔÍ¶³öµÄºÏ×÷Êı
+%Decay:Ë¥¼õÂÊ£¬¼´µ±½ÚµãÁ¬½ÓÊı¹ı¶àÊ±£¬ÆäËû½ÚµãÑ¡ÔñÊ±ÇãÏò²»Ñ¡Ôñ¸Ãµã
+%RButton:Ò×ºÏ×÷³Ì¶ÈÊÇ·ñÓë½Úµã±¾ÉíµÄRÖµÓĞ¹Ø£¬1ÎªÓĞ¹Ø£¬·ñÔòÎŞ¹Ø
+%Êä³ö²ÎÊıÎª
+%Arc:µü´úºóÍøÂç±ßµÄÁ¬½Ó
+%FundRate:»ù´¡Öµ±ÈÀı
+%¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¿ªÊ¼µü´ú¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
+LayerNum = length(Graph);%µÃµ½²ãÊı
 for i = 1 : LayerNum-1
-    NextArc = [];%å¼€è¾Ÿæ•°ç»„è®°å½•è¿­ä»£ç»“æŸåçš„è¿æ¥
-    ArcTemp = Arc{i};%æœ¬è½®çš„è¿æ¥
-    CoopRateTh = zeros(1,length(Graph{i}));%åˆå§‹åŒ–æœ¬å±‚æ˜“åˆä½œç¨‹åº¦
-    CoopRateNt = zeros(1,length(Graph{i+1}));%åˆå§‹åŒ–ä¸‹å±‚æ˜“åˆä½œç¨‹åº¦
-    %è®¡ç®—æœ¬å±‚ä¸ä¸‹å±‚çš„æ˜“åˆä½œç¨‹åº¦
+    NextArc = [];%¿ª±ÙÊı×é¼ÇÂ¼µü´ú½áÊøºóµÄÁ¬½Ó
+    ArcTemp = Arc{i};%±¾ÂÖµÄÁ¬½Ó
+    CoopRateTh = zeros(1,length(Graph{i}));%³õÊ¼»¯±¾²ãÒ×ºÏ×÷³Ì¶È
+    CoopRateNt = zeros(1,length(Graph{i+1}));%³õÊ¼»¯ÏÂ²ãÒ×ºÏ×÷³Ì¶È
+    %¼ÆËã±¾²ãÓëÏÂ²ãµÄÒ×ºÏ×÷³Ì¶È
     for j = 1 : size(Arc{i}, 1)
-        temp = Arc{i}(j,2)-Graph{i+1}(1)+1;%è¿æ¥çš„ä¸‹å±‚èŠ‚ç‚¹çš„ç´¢å¼•
-        temp2 = Arc{i}(j,1)-Graph{i}(1)+1;%è¿æ¥çš„ä¸Šå±‚èŠ‚ç‚¹çš„ç´¢å¼•
+        temp = Arc{i}(j,2)-Graph{i+1}(1)+1;%Á¬½ÓµÄÏÂ²ã½ÚµãµÄË÷Òı
+        temp2 = Arc{i}(j,1)-Graph{i}(1)+1;%Á¬½ÓµÄÉÏ²ã½ÚµãµÄË÷Òı
         CoopRateNt(temp) = CoopRateNt(temp) + R{i}(temp2);
         CoopRateTh(temp2) = CoopRateTh(temp2) + R{i+1}(temp);
     end
+    %Ôö¼Ó½Úµã±¾ÉíµÄÖµ
+    if(RButton == 1)
+        CoopRateTh = CoopRateTh + R{i};
+        CoopRateNt = CoopRateNt + R{i+1};
+    end
+    %Ôö¼ÓË¥¼õÂÊÏî
+    CoopRateTh = CoopRateTh.*Decay{i}(2,:);
+    CoopRateNt = CoopRateNt.*Decay{i+1}(1,:);
     
-    %å¢åŠ åŸºç¡€å€¼
-    CoopRateTh = CoopRateTh + FundRate*mean(CoopRateTh);
-    CoopRateNt = CoopRateNt + FundRate*mean(CoopRateNt);
-%â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”æ±‚è§£åˆä½œæ„æ„¿â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”  
-    CoopWillTh = zeros(length(Graph{i}), CoopNum);%è®°å½•æœ¬å±‚çš„åˆä½œæ„æ„¿
-    CoopWillNt = zeros(length(Graph{i+1}), CoopNum);%è®°å½•ä¸‹å±‚çš„åˆä½œæ„æ„¿
-    %æ±‚è§£æœ¬å±‚åˆä½œæ„æ„¿
+        
+    %Ôö¼Ó»ù´¡Öµ
+    CoopRateTh = CoopRateTh + FundRate*mean(CoopRateTh) + 1;
+    CoopRateNt = CoopRateNt + FundRate*mean(CoopRateNt) + 1;
+%¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ªÇó½âºÏ×÷ÒâÔ¸¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª  
+    CoopWillTh = zeros(length(Graph{i}), CoopNum);%¼ÇÂ¼±¾²ãµÄºÏ×÷ÒâÔ¸
+    CoopWillNt = zeros(length(Graph{i+1}), CoopNum);%¼ÇÂ¼ÏÂ²ãµÄºÏ×÷ÒâÔ¸
+    %Çó½â±¾²ãºÏ×÷ÒâÔ¸
     for j = 1 : length(Graph{i})
-        TempNum = Graph{i}(j);%è®°å½•å¿èŠ‚ç‚¹ç¼–å·
-        TempRetain = find(ArcTemp == TempNum);%ä¿ç•™è¾¹ç´¢å¼•
+        TempNum = Graph{i}(j);%¼ÇÂ¼ÏØ½Úµã±àºÅ
+        TempRetain = find(ArcTemp == TempNum);%±£Áô±ßË÷Òı
         if ( rand > P{i}(j) & length(TempRetain) > 0 )
-            %ä¿ç•™æ„æ„¿
+            %±£ÁôÒâÔ¸
             TempCRN = CoopRateNt;
             for k = 1 : length(TempRetain)
                 CoopWillTh(j,k) = ArcTemp(TempRetain(k), 2);
-                TempCRN( ArcTemp(TempRetain(k), 2)-Graph{i+1}(1)+1 ) = 0;%å·²ç»é€‰ä¸­çš„å»æ‰æƒé‡
+                TempCRN( ArcTemp(TempRetain(k), 2)-Graph{i+1}(1)+1 ) = 0;%ÒÑ¾­Ñ¡ÖĞµÄÈ¥µôÈ¨ÖØ
             end
             if k < CoopNum
-                %ä¿ç•™æ„æ„¿ä¸‹å¹¶æœªè¾¾åˆ°åŸºæœ¬é€‰æ‹©æ•°
+                %±£ÁôÒâÔ¸ÏÂ²¢Î´´ïµ½»ù±¾Ñ¡ÔñÊı
                 CoopWillTh(j,k+1:end) = Dis_Rand(Graph{i+1},TempCRN,CoopNum-k);
             end
         else
-            %é‡æ–°é€‰æ‹©æ„æ„¿
+            %ÖØĞÂÑ¡ÔñÒâÔ¸
             CoopWillTh(j, 1:end) = Dis_Rand(Graph{i+1},CoopRateNt,CoopNum);
         end
     end
     
     
-    %æ±‚è§£ä¸‹å±‚åˆä½œæ„æ„¿
-    %ä¸ºäº†æ–¹ä¾¿æ±‚è§£ï¼Œäº¤æ¢è¿æ¥çŸ©é˜µçš„è¡¨ç¤ºé¡ºåºï¼Œä½¿ç¬¬ä¸€åˆ—ä¸ºä¸‹å±‚èŠ‚ç‚¹
+    %Çó½âÏÂ²ãºÏ×÷ÒâÔ¸
+    %ÎªÁË·½±ãÇó½â£¬½»»»Á¬½Ó¾ØÕóµÄ±íÊ¾Ë³Ğò£¬Ê¹µÚÒ»ÁĞÎªÏÂ²ã½Úµã
     temp = ArcTemp(:,2);
     ArcTemp(:,2) = ArcTemp(:,1);
     ArcTemp(:,1) = temp;
     for j = 1 : length(Graph{i+1})
-        TempNum = Graph{i+1}(j);%è®°å½•ç°èŠ‚ç‚¹ç¼–å·
-        TempRetain = find(ArcTemp == TempNum);%ä¿ç•™è¾¹ç´¢å¼•
+        TempNum = Graph{i+1}(j);%¼ÇÂ¼ÏÖ½Úµã±àºÅ
+        TempRetain = find(ArcTemp == TempNum);%±£Áô±ßË÷Òı
         if ( rand > P{i+1}(j) & length(TempRetain) > 0 )
-            %ä¿ç•™æ„æ„¿
+            %±£ÁôÒâÔ¸
             TempCRN = CoopRateTh;
             for k = 1 : length(TempRetain)
                 CoopWillNt(j,k) = ArcTemp(TempRetain(k), 2);
-                TempCRN( ArcTemp(TempRetain(k), 2)-Graph{i}(1)+1 ) = 0;%å·²ç»é€‰ä¸­çš„å»æ‰æƒé‡
+                TempCRN( ArcTemp(TempRetain(k), 2)-Graph{i}(1)+1 ) = 0;%ÒÑ¾­Ñ¡ÖĞµÄÈ¥µôÈ¨ÖØ
             end
             if k < CoopNum
-                %ä¿ç•™æ„æ„¿ä¸‹å¹¶æœªè¾¾åˆ°åŸºæœ¬é€‰æ‹©æ•°
+                %±£ÁôÒâÔ¸ÏÂ²¢Î´´ïµ½»ù±¾Ñ¡ÔñÊı
                 CoopWillNt(j,k+1:end) = Dis_Rand(Graph{i},TempCRN,CoopNum-k);
             end
         else
-            %é‡æ–°é€‰æ‹©æ„æ„¿
+            %ÖØĞÂÑ¡ÔñÒâÔ¸
             CoopWillNt(j, 1:end) = Dis_Rand(Graph{i},CoopRateTh,CoopNum);
         end
     end
-%â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”æ ¹æ®åˆä½œæ„æ„¿ï¼Œæ›´æ–°è¾¹è¿æ¥â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”â€”
+%¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¸ù¾İºÏ×÷ÒâÔ¸£¬¸üĞÂ±ßÁ¬½Ó¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª
     for j = 1 : length(Graph{i})
-        ThPt = j + Graph{i}(1) - 1;%è¯¥ç‚¹çš„åºå·
+        ThPt = j + Graph{i}(1) - 1;%¸ÃµãµÄĞòºÅ
         for k = 1 : CoopNum
-            CoPt = CoopWillTh(j, k);%åˆä½œç‚¹çš„åºå·
-            temp1 = CoPt - Graph{i+1}(1) + 1;%åˆä½œç‚¹åœ¨ä¸‹å±‚ä¸­çš„ç´¢å¼•
+            CoPt = CoopWillTh(j, k);%ºÏ×÷µãµÄĞòºÅ
+            temp1 = CoPt - Graph{i+1}(1) + 1;%ºÏ×÷µãÔÚÏÂ²ãÖĞµÄË÷Òı
             if(length(find( CoopWillNt(temp1,:) ==  ThPt )) > 0)
                 TempArc = [ThPt CoPt];
                 NextArc = [NextArc; TempArc];
             end
         end
     end
-    Arc{i} = unique(NextArc,'rows');%å¾—åˆ°è¿­ä»£åçš„ç»“æ„
+    Arc{i} = unique(NextArc,'rows');%µÃµ½µü´úºóµÄ½á¹¹
 %     unique(NextArc,'rows')
 end
 end
