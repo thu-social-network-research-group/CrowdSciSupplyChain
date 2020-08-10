@@ -7,7 +7,7 @@ CoopNum = 5; %每个节点最大连接数k
 Max_node = 14; % 每一层最大节点个数
 Min_node = 14;  %每一层最小节点个数
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %创建图与边元胞
-R_TH=0.1;   %%如果R小于R_TH，将被删除
+R_TH=0.001;   %%如果R小于R_TH，将被删除
 
 
 Repu = Repu_intial2(Graph); %The reputation of every agent, the cooperate rate of every agent in last turn
@@ -52,17 +52,21 @@ AgentLabel = AgentLabel_intial(Graph, GreedAgentRate);%The label of the agent to
 
 
 for i = 1:iteration
-    [~,V_list] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点R值�?�V�?(展开为长向量)
+    V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
+    [~,V_list] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点展开V为长向量
     R = R_Calc2(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
     %R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma,payoff_one_turn);    %R值计算（更新）R(t)->R(t+1)
-    V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
+    [R_list,~] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点展开R为长向量
+    
     %%%% Remove Node
-    [Graph,Arc,R,V,Repu,TP,AgentLabel] = RemoveNode(Graph,Arc,R,V,Repu,TP,AgentLabel,R_TH);   %%去点
-    [R_list,V_list] = calc_RV_list(R,V) ; 
+    if i>20
+         [Graph,Arc,R,V,Repu,TP,AgentLabel] = RemoveNode(Graph,Arc,R,V,Repu,TP,AgentLabel,R_TH);   %%去点
+    end
+   
     %%%% Add Node
     for ii=2:length(Graph)-1        %%从第2层到倒数第2层
         if length(Graph{ii}) < Min_node+1      %%如果某层节点数少于Min_node个
-            [Graph,Arc,R,V,Repu,TP,AgentLabel] = AddNode(Graph,Arc,R,V,Repu,TP,AgentLabel,GreedAgentRate,ii); %%加点
+           % [Graph,Arc,R,V,Repu,TP,AgentLabel] = AddNode(Graph,Arc,R,V,Repu,TP,AgentLabel,GreedAgentRate,ii); %%加点
         end
     end   
 
@@ -72,7 +76,8 @@ for i = 1:iteration
     Decay = CalDecay(Graph, Arc, DecayRate, CoopNum);%����˥����
     Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton);%��������
     Dis = CalDis(Graph, Arc, CoopNum);
-    [TP, payoff_one_turn, Repu, Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel);
+    [TP, Repu Arcs] = AgentGame(Graph, Arc, Repu, TP, Payoff);
+  % [TP, payoff_one_turn, Repu, Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel);
 %     DIS = [DIS mean(Dis)];
 
 
