@@ -1,4 +1,4 @@
-function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new,AgentLabel_new] = RemoveNode(Graph,Arc,R,V,Repu,TP,AgentLabel,TH)
+function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new,payoff_one_turn_new,AgentLabel_new] = RemoveNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,TH)
 %This function aims to remove those node with little R(R<TH)
 %TH is the THRESHOLD
 Graph_new=Graph;
@@ -7,6 +7,7 @@ R_new=R;
 V_new=V;
 Repu_new=Repu;
 TP_new=TP;
+payoff_one_turn_new = payoff_one_turn;
 AgentLabel_new=AgentLabel;
 count=1;
 count_new=1;
@@ -23,6 +24,7 @@ while i <= length(R_new)
             Graph_new{i}(j)=[];
             Repu_new(:,count)=66666;
             TP_new(:,count)=77777;
+            payoff_one_turn_new(:,count) = 77777;
             AgentLabel_new(:,count)=88888;
             if i==1
                 [remove_Arc_row,~]=find(Arc_new{i}==temp);
@@ -50,6 +52,7 @@ end
 %Repu,TP,AgentLabel's final Removal
 Repu_new(:,Repu_new(1,:) == 66666)=[];
 TP_new(TP_new(1,:) == 77777) = [];
+payoff_one_turn_new(payoff_one_turn_new(1,:) == 77777) = [];
 AgentLabel_new(AgentLabel_new(1,:) == 88888) = [];
 
 %recount
@@ -66,7 +69,7 @@ for i=1:length(Graph_new)
                 Arc_new{i}(change_node_row,1)=count_new;
             elseif i==length(R)
                 [change_node_row,~]=find(Arc_new{i-1}==temp);
-                Arc_new{i}(change_node_row,2)=count_new;
+                Arc_new{i-1}(change_node_row,2)=count_new;
             else
                 [change_node_row,~]=find(Arc_new{i}==temp);
                 Arc_new{i}(change_node_row,1)=count_new;
@@ -76,10 +79,6 @@ for i=1:length(Graph_new)
         end
     end
 end
-%%%%暂时的解决方法
-if length(Arc_new)==8
-    Arc_new{7}(:,2) = Arc_new{8}(:,2);
-    Arc_new(8)=[];
-end
 
+disp(count_new);
 end

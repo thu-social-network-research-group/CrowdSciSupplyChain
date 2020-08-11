@@ -9,7 +9,7 @@
 %       Arc:记录网络边的连接
 
 % -------------------------------------------------------------------------
-function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new,AgentLabel_new] = AddNode(Graph,Arc,R,V,Repu,TP,AgentLabel,GreedAgentRate,K)
+function [Graph_new,Arc_new,R_new,V_new,Repu_new,TP_new,payoff_one_turn_new,AgentLabel_new] = AddNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,GreedAgentRate,K)
 
 alpha = 0.1;  %弱连接系数
 a = 1/3; b = 1/3; c = 1/3; %产量线性组合参数
@@ -32,14 +32,17 @@ add_node_number = Graph{K}(start_flag)+1;
 %%Repu, TP,  AgentLabel update
 Repu_new = Repu;
 TP_new = TP;
+payoff_one_turn_new = payoff_one_turn;
 AgentLabel_new=AgentLabel;
 
 if add_node_number == length(Repu_new)
     Repu_new = [Repu_new,zeros(3,1)];
     TP_new = [TP_new,0];
+    payoff_one_turn_new = [payoff_one_turn_new,0];
 else
     Repu_new = [Repu_new(:,1:add_node_number-1),zeros(3,1), Repu_new(:,add_node_number:end)];   %%%%%%%
     TP_new = [TP_new(1:add_node_number-1),0,TP_new(add_node_number:end)];
+    payoff_one_turn_new = [payoff_one_turn_new(1:add_node_number-1),0,payoff_one_turn_new(add_node_number:end)];
     AgentLabel_new=[AgentLabel_new(1:add_node_number-1),New_node_AgentLabel,AgentLabel_new(add_node_number:end)];
 end
 
@@ -94,8 +97,8 @@ else
     R{K} = [R{K}(1:start_flag), New_node_R_initial, R{K}(start_flag+1:end)];
 end
 
-[R_list,V_list] = calc_RV_list(R,V) ;
-R = R_Calc2(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
+% [R_list,V_list] = calc_RV_list(R,V) ;
+% R = R_Calc2(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
 
 Graph_new=Graph;
 Arc_new=Arc;

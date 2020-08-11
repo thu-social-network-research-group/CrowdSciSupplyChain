@@ -54,21 +54,21 @@ AgentLabel = AgentLabel_intial(Graph, GreedAgentRate);%The label of the agent to
 for i = 1:iteration
     V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
     [~,V_list] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点展开V为长向量
-    R = R_Calc2(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
-    %R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma,payoff_one_turn);    %R值计算（更新）R(t)->R(t+1)
+%     R = R_Calc2(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
+    R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma,payoff_one_turn);    %R值计算（更新）R(t)->R(t+1)
     [R_list,~] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点展开R为长向量
     
     %%%% Remove Node
     if i>40
-         [Graph,Arc,R,V,Repu,TP,AgentLabel] = RemoveNode(Graph,Arc,R,V,Repu,TP,AgentLabel,R_TH);   %%去点
+         [Graph,Arc,R,V,Repu,TP,payoff_one_turn, AgentLabel] = RemoveNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,R_TH);   %%去点
     end
    
     %%%% Add Node
-    for ii=2:length(Graph)-1        %%从第2层到倒数第2层
-        if length(Graph{ii}) < Min_node+1      %%如果某层节点数少于Min_node个
-           % [Graph,Arc,R,V,Repu,TP,AgentLabel] = AddNode(Graph,Arc,R,V,Repu,TP,AgentLabel,GreedAgentRate,ii); %%加点
-        end
-    end   
+%     for ii=2:length(Graph)-1        %%从第2层到倒数第2层
+%         if length(Graph{ii}) < Min_node+1     %%如果某层节点数少于Min_node个
+%            [Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel] = AddNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,GreedAgentRate,ii); %%加点
+%         end
+%     end   
 
     
     
@@ -76,8 +76,8 @@ for i = 1:iteration
     Decay = CalDecay(Graph, Arc, DecayRate, CoopNum);%����˥����
     Arc = UpdateArc(Graph, Arc, R, P, CoopNum, FundRate, Decay, RButton);%��������
     Dis = CalDis(Graph, Arc, CoopNum);
-    [TP, Repu Arcs] = AgentGame(Graph, Arc, Repu, TP, Payoff);
-  % [TP, payoff_one_turn, Repu, Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel);
+%     [TP, Repu Arcs] = AgentGame(Graph, Arc, Repu, TP, Payoff);
+    [TP, payoff_one_turn, Repu, Arcs] = AgentGame2(Graph, Arc, Repu, TP, Payoff, gama, AgentLabel);
 %     DIS = [DIS mean(Dis)];
 
 
@@ -89,7 +89,7 @@ for i = 1:iteration
     MeanTP(i, 1) = mean(TP);
     MeanTP(i, 2) = mean(TP(find(AgentLabel == 1)));
     MeanTP(i, 3) = mean(TP(find(AgentLabel == 2)));
-%     connects = checkConnects(Arc);
+    connects = checkConnects(Arc);
 %     layer_connect(i, :) = connects{1, 2};  % if want to check any layers connects, just change the connects {1, ?}
     %%%���Ĳ���%%%
     

@@ -13,7 +13,11 @@ function R_new = R_calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma,payoff_one_
         for j = 1:length(R{i})
             %temp = a*V_list(Graph{i}(j))+b*calc_parents_V(Graph,Arc,V_list,i,j)+c*calc_childs_V(Graph,Arc,V_list,i,j); 
             %temp = exp(-temp);
-            temp = payoff_one_turn(Graph{i}(j))/ max(payoff_one_turn);
+            if max(payoff_one_turn)==0
+                temp = 0;
+            else
+                temp = payoff_one_turn(Graph{i}(j))/ max(payoff_one_turn);
+            end
             g{i}(j) = gamma*normrnd(temp, 1/R{i}(j)*R_sigma);%
             R_new{i}(j) = max(0.001, (1-alpha)*R{i}(j)+alpha*g{i}(j));
         end

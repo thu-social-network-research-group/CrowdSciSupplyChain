@@ -22,7 +22,7 @@ for i = 1 : LayerNum-1
     %计算本层与下层的易合作程度
     for j = 1 : size(Arc{i}, 1)
         temp = Arc{i}(j,2)-Graph{i+1}(1)+1;%连接的下层节点的索引
-        temp2 = Arc{i}(j,1)-Graph{i}(1)+1;%连接的上层节点的索引
+        temp2 = Arc{i}(j,1)-Graph{i}(1)+1;%连接的上层节点的索引 
         CoopRateNt(temp) = CoopRateNt(temp) + R{i}(temp2);
         CoopRateTh(temp2) = CoopRateTh(temp2) + R{i+1}(temp);
     end
@@ -56,10 +56,12 @@ for i = 1 : LayerNum-1
             if k < CoopNum
                 %保留意愿下并未达到基本选择数
                 CoopWillTh(j,k+1:end) = Dis_Rand(Graph{i+1},TempCRN,CoopNum-k);
+%                 disp(CoopWillTh(j,k+1:end));
             end
         else
             %重新选择意愿
             CoopWillTh(j, 1:end) = Dis_Rand(Graph{i+1},CoopRateNt,CoopNum);
+%             disp(CoopWillTh(j, 1:end));
         end
     end
     
@@ -82,10 +84,13 @@ for i = 1 : LayerNum-1
             if k < CoopNum
                 %保留意愿下并未达到基本选择数
                 CoopWillNt(j,k+1:end) = Dis_Rand(Graph{i},TempCRN,CoopNum-k);
+%                 disp(CoopWillNt(j, k+1:end));
+
             end
         else
             %重新选择意愿
             CoopWillNt(j, 1:end) = Dis_Rand(Graph{i},CoopRateTh,CoopNum);
+%             disp(CoopWillNt(j, 1:end));
         end
     end
 %—————————————根据合作意愿，更新边连接————————————
