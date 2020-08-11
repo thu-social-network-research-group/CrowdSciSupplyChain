@@ -65,8 +65,9 @@ for i = 1:iteration
    
     %%%% Add Node
     for ii=2:length(Graph)-1        %%从第2层到倒数第2层
-        if length(Graph{ii}) < 8      %%如果某层节点数少于Min_node个
+        if length(Graph{ii}) < 12      %%如果某层节点数少于Min_node个
             [Graph,Arc,R,V,Repu,TP,AgentLabel] = AddNode(Graph,Arc,R,V,Repu,TP,AgentLabel,GreedAgentRate,ii); %%加点
+            break;
         end
     end   
 
