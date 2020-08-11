@@ -104,7 +104,11 @@ Graph_new=Graph;
 Arc_new=Arc;
 R_new=R;
 V_new=V;
-disp(add_node_number);
+if New_node_AgentLabel==2
+    disp("第"+K+"层增加节点，节点编号为"+add_node_number+"节点类型为贪婪节点");
+else
+    disp("第"+K+"层增加节点，节点编号为"+add_node_number+"节点类型为非贪婪节点");
+end
 end
 
  

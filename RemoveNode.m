@@ -79,6 +79,8 @@ for i=1:length(Graph_new)
         end
     end
 end
-
-disp(count_new);
+delete_num=length(TP)-length(TP_new);
+if length(TP)>length(TP_new)
+    disp("本轮共删除了"+delete_num+"个节点，原节点数为"+length(TP)+"，当前节点数为"+length(TP_new));
+end
 end

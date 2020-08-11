@@ -7,7 +7,7 @@ CoopNum = 5; %每个节点最大连接数k
 Max_node = 18; % 每一层最大节点个数
 Min_node = 14;  %每一层最小节点个数
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %创建图与边元胞
-R_TH=2;   %%如果R小于R_TH，将被删除
+R_TH=1;   %%如果R小于R_TH，将被删除
 
 
 Repu = Repu_intial2(Graph); %The reputation of every agent, the cooperate rate of every agent in last turn
@@ -101,11 +101,18 @@ for i = 1:iteration
 %         hist(Dis, CoopNum+1);
 %         figure(2)
         clf
-        GraphPoint = CalGarphPoint(Graph); 
+        GraphPoint = CalGarphPoint(Graph);
+        
+        
         %%%%���Ĳ���%%%%
         ShowGraph2(GraphPoint, Arcs);
+        %%%%���Ĳ���%%%%
+        
+        
         %pause(1)
-        disp("当前轮数为"+i+"平均R值为"+REval(i,1)+"，最大R值为"+REval(i,2)+"，最小R值为"+REval(i,3)+"，R值方差为"+REval(i,4));
+        disp("当前轮数为"+i+"平均R值为"+REval(i,1)+"最大R值为"+REval(i,2)+"最小R值为"+REval(i,3));
+        
+        
     end
 end
 
