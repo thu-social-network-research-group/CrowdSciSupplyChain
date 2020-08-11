@@ -104,6 +104,7 @@ Graph_new=Graph;
 Arc_new=Arc;
 R_new=R;
 V_new=V;
+disp(add_node_number);
 end
 
  

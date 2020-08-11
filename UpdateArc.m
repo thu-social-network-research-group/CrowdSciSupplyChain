@@ -55,12 +55,12 @@ for i = 1 : LayerNum-1
             end
             if k < CoopNum
                 %保留意愿下并未达到基本选择数
-                CoopWillTh(j,k+1:end) = Dis_Rand(Graph{i+1},TempCRN,CoopNum-k);
+                CoopWillTh(j,k+1:CoopNum) = Dis_Rand(Graph{i+1},TempCRN,CoopNum-k);
 %                 disp(CoopWillTh(j,k+1:end));
             end
         else
             %重新选择意愿
-            CoopWillTh(j, 1:end) = Dis_Rand(Graph{i+1},CoopRateNt,CoopNum);
+            CoopWillTh(j, 1:CoopNum) = Dis_Rand(Graph{i+1},CoopRateNt,CoopNum);
 %             disp(CoopWillTh(j, 1:end));
         end
     end
@@ -83,13 +83,13 @@ for i = 1 : LayerNum-1
             end
             if k < CoopNum
                 %保留意愿下并未达到基本选择数
-                CoopWillNt(j,k+1:end) = Dis_Rand(Graph{i},TempCRN,CoopNum-k);
+                CoopWillNt(j,k+1:CoopNum) = Dis_Rand(Graph{i},TempCRN,CoopNum-k);
 %                 disp(CoopWillNt(j, k+1:end));
 
             end
         else
             %重新选择意愿
-            CoopWillNt(j, 1:end) = Dis_Rand(Graph{i},CoopRateTh,CoopNum);
+            CoopWillNt(j, 1:CoopNum) = Dis_Rand(Graph{i},CoopRateTh,CoopNum);
 %             disp(CoopWillNt(j, 1:end));
         end
     end
