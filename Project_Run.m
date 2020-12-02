@@ -36,13 +36,15 @@ RButton = 1;% 改变策略的概率计算中，sigmoid函数的参数
 DecayRate = 0.5;
 gama = 0.7;%The decay rate of Repu
 GreedAgentRate = 0.2;%The rate of greed agent
+recover_R = [];
+ind_i = 0;
 % -------------------------------------------------------------------------
 % 更新图Arc过程
 % DIS = [];
 
 
 %%%���Ĳ���%%%
-REval = zeros(iteration, 6);
+REval = zeros(iteration, 7);
 layer_connect = zeros(iteration, 4);  % max, min, average, variance
 CoopRate = zeros(iteration, 1);
 ArcTypeRate = zeros(iteration, 3);
@@ -59,17 +61,25 @@ for i = 1:iteration
     [R_list,~] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点展开R为长向量
     
     %%%% Remove Node
-    if i>40
-         [Graph,Arc,R,V,Repu,TP,payoff_one_turn, AgentLabel] = RemoveNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,R_TH);   %%去点
-    end
+    % if i>40
+    %      [Graph,Arc,R,V,Repu,TP,payoff_one_turn, AgentLabel] = RemoveNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,R_TH);   %%去点
+    % end
    
     %%%% Add Node
-    for ii=2:length(Graph)-1        %%从第2层到倒数第2层
-        if length(Graph{ii}) < Min_node+1     %%如果某层节点数少于Min_node个
-           [Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel] = AddNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,GreedAgentRate,ii); %%加点
-        end
-    end   
-
+    % for ii=2:length(Graph)-1        %%从第2层到倒数第2层
+    %     if length(Graph{ii}) < Min_node+1     %%如果某层节点数少于Min_node个
+    %        [Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel] = AddNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,GreedAgentRate,ii); %%加点
+    %     end
+    % end  
+    
+    %%% under attack
+    if mod(i,200) == 0
+        percentage = 0.3;
+        [R,V,ind_i,ind_j] = attack_RV(R_list,V_list,percentage,Graph);
+    end
+    if ind_i ~= 0 % plot the recovery of specific node 
+        recover_R = [recover_R, R{ind_i}(ind_j)];
+    end
     
     
     P = calculateP(R, P_sigma);
@@ -82,7 +92,7 @@ for i = 1:iteration
 
 
     %%%���Ĳ���---λ�ø��������������
-    REval(i, :) = outputStat(R);
+    REval(i, :) = outputStat(R,V);
     layer_connect(i, :) = checkConnectsAll(Arc);
     CoopRate(i) = mean(Repu(1, :));
     ArcTypeRate(i, :) = CalArcTypeRate(Arcs);
@@ -105,12 +115,18 @@ for i = 1:iteration
         %%%%���Ĳ���%%%%
         ShowGraph2(GraphPoint, Arcs);
         %pause(1)
-        disp("当前轮数为"+i+"平均R值为"+REval(i,1)+"，最大R值为"+REval(i,2)+"，最小R值为"+REval(i,3)+"，R值方差为"+REval(i,4));
+        disp("current iter "+i+", mean R "+REval(i,1)+", max R "+REval(i,2)+",min R "+REval(i,3)+", var R"+REval(i,4));
     end
 end
 
 
 %%%%���Ĳ���%%%%
+figure
+plot(recover_R);
+
+figure
+plot(REval(:,7));
+legend('Health')
 figure
 plot(REval(:,1:3));
 hold on
