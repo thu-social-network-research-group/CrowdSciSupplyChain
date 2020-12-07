@@ -18,11 +18,13 @@ function REval = outputStat(R, V)
         R0 = [R0 R{i}];
         V0 = [V0 V{i}];
     end
-    healthy = mean(k1 * R0 + k2 * V0);
+    
+    VAvg = mean(V0);
     RAvg = mean(R0);
+    healthy = RAvg / VAvg;%mean(k1 * R0 + k2 * V0)
     RMax = max(R0);
     RMin = min(R0);
     RVar = var(R0);
     RDistribution = prctile(R0,[10,90]);
-    REval = [RAvg RMax RMin RVar RDistribution healthy];
+    REval = [RAvg RMax RMin RVar RDistribution healthy VAvg];
 end

@@ -1,7 +1,7 @@
 %%项目主函数
 %R为t时刻各节点弹性值，V为t时刻各节点产值
 clc;clear;
-iteration = 500;  % 迭代的次数
+iteration = 5000;  % 迭代的次数
 Chain_layer_Num=8;    %节点层数
 CoopNum = 5; %每个节点最大连接数k
 Max_node = 18; % 每一层最大节点个数
@@ -44,7 +44,7 @@ ind_i = 0;
 
 
 %%%���Ĳ���%%%
-REval = zeros(iteration, 7);
+REval = zeros(iteration, 8);
 layer_connect = zeros(iteration, 4);  % max, min, average, variance
 CoopRate = zeros(iteration, 1);
 ArcTypeRate = zeros(iteration, 3);
@@ -54,7 +54,7 @@ AgentLabel = AgentLabel_intial(Graph, GreedAgentRate);%The label of the agent to
 
 
 for i = 1:iteration
-    V = V_calc(R,V,V_sigma);        %V值计算（更新）V(t)->V(t+1)
+    V = V_calc(Graph,R,V,V_sigma, payoff_one_turn);        %V值计算（更新）V(t)->V(t+1)
     [~,V_list] = calc_RV_list(R,V) ;    %%按照序号顺序排列各节点展开V为长向量
 %     R = R_Calc2(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma);
     R = R_Calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma,payoff_one_turn);    %R值计算（更新）R(t)->R(t+1)
@@ -73,13 +73,16 @@ for i = 1:iteration
     % end  
     
     %%% under attack
-    if mod(i,200) == 0
-        percentage = 0.3;
+    percentage = 0.9;
+    if i == 1000
         [R,V,ind_i,ind_j] = attack_RV(R_list,V_list,percentage,Graph);
+%     elseif mod(i,1000) == 0
+%         [R,V,~,~] = attack_RV(R_list,V_list,percentage,Graph);
     end
     if ind_i ~= 0 % plot the recovery of specific node 
         recover_R = [recover_R, R{ind_i}(ind_j)];
     end
+
     
     
     P = calculateP(R, P_sigma);
@@ -123,10 +126,13 @@ end
 %%%%���Ĳ���%%%%
 figure
 plot(recover_R);
-
+legend('Recover R')
 figure
 plot(REval(:,7));
 legend('Health')
+figure
+plot(REval(:,8));
+legend('VAvg')
 figure
 plot(REval(:,1:3));
 hold on
