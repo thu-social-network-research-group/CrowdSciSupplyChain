@@ -21,7 +21,7 @@ function REval = outputStat(R, V)
     
     VAvg = mean(V0);
     RAvg = mean(R0);
-    healthy = RAvg / VAvg;%mean(k1 * R0 + k2 * V0)
+    healthy = RAvg - VAvg;%mean(k1 * R0 + k2 * V0)
     RMax = max(R0);
     RMin = min(R0);
     RVar = var(R0);

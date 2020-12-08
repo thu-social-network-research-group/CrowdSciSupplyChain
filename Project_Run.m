@@ -1,7 +1,7 @@
 %%项目主函数
 %R为t时刻各节点弹性值，V为t时刻各节点产值
 clc;clear;
-iteration = 5000;  % 迭代的次数
+iteration = 1000;  % 迭代的次数
 Chain_layer_Num=8;    %节点层数
 CoopNum = 5; %每个节点最大连接数k
 Max_node = 18; % 每一层最大节点个数
@@ -21,7 +21,7 @@ Payoff{2,2} = [4,4];%agent1 and agent2 defect
 
 R = R_initial(Graph);   %R值初始化(按照Beta(2,5)分布)
 min_A = 3; max_A = 10;  %节点i能力上下界
-V = V_initial(Graph, min_A, max_A);   %V值初始化(按照Beta(2.5)分布和各节点初始能力值初始化)
+V = V_initial(Graph, min_A, max_A);   %V值初始化(按照Beta(2,5)分布和各节点初始能力值初始化)
 
 %R(t+1)=(1-alpha)R(t)+alpha*g(V(t),Vu(t),Vd(t))
 %g()~N((a*V+b*Vu+c*Vd),0.1)
@@ -72,15 +72,21 @@ for i = 1:iteration
     %     end
     % end  
     
-    %%% under attack
-    percentage = 0.9;
-    if i == 1000
-        [R,V,ind_i,ind_j] = attack_RV(R_list,V_list,percentage,Graph);
-%     elseif mod(i,1000) == 0
-%         [R,V,~,~] = attack_RV(R_list,V_list,percentage,Graph);
-    end
-    if ind_i ~= 0 % plot the recovery of specific node 
-        recover_R = [recover_R, R{ind_i}(ind_j)];
+    %%% under attack1
+%     percentage = 0.9;
+%     if i == 200
+%         [R,V,ind_i,ind_j] = attack_RV(R_list,V_list,percentage,Graph);
+% %     elseif mod(i,1000) == 0
+% %         [R,V,~,~] = attack_RV(R_list,V_list,percentage,Graph);
+%     end
+%     if ind_i ~= 0 % plot the recovery of specific node 
+%         recover_R = [recover_R, R{ind_i}(ind_j)];
+%     end
+
+    %%% under attack2
+    percentage = 0.5;
+    if i == 200
+        [Graph,Arc,R,V,Repu,TP,payoff_one_turn, AgentLabel] = attackNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,percentage);   %%去点
     end
 
     

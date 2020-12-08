@@ -12,11 +12,11 @@ function R_new = R_calc(Graph,Arc,R,V_list,alpha,a,b,c,R_sigma,gamma,payoff_one_
     for i = 1:length(R)
         for j = 1:length(R{i})
             temp = a*V_list(Graph{i}(j))+b*calc_parents_V(Graph,Arc,V_list,i,j)+c*calc_childs_V(Graph,Arc,V_list,i,j); 
-            if temp > 0
-                temp = log(temp);
-            else
-                temp = -log(-temp);
-            end
+            % if temp > 0
+            %     temp = log(temp);
+            % else
+            %     temp = -log(-temp);
+            % end
             % if max(payoff_one_turn)==0
             %     temp = 0;
             % else
