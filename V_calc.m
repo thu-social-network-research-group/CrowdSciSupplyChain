@@ -9,7 +9,8 @@ function V = V_calc(Graph,R,V,V_sigma, payoff_one_turn)
             if max(payoff_one_turn)==0
                 temp = 0;
             else %normalized to (0,1)
-                temp =  (payoff_one_turn(Graph{i}(j)) - min(payoff_one_turn)) / (max(payoff_one_turn) - min(payoff_one_turn));
+%                 temp =  (payoff_one_turn(Graph{i}(j)) - min(payoff_one_turn)) / (max(payoff_one_turn) - min(payoff_one_turn));
+                temp =  payoff_one_turn(Graph{i}(j));
             end
             V{i}(j) = normrnd(0.9*V{i}(j) + temp, V_sigma);
             % V{i}(j) = normrnd(V{i}(j), V_sigma)  + temp;

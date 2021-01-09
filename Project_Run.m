@@ -5,7 +5,7 @@ iteration = 1000;  % 迭代的次数
 Chain_layer_Num=8;    %节点层数
 CoopNum = 5; %每个节点最大连接数k
 Max_node = 18; % 每一层最大节点个数
-Min_node = 14;  %每一层最小节点个数
+Min_node = 12;  %每一层最小节点个数
 [Graph,Arc]=Graph_Create(Chain_layer_Num, CoopNum, Max_node, Min_node);     %创建图与边元胞
 R_TH=1;   %%如果R小于R_TH，将被删除
 
@@ -73,21 +73,21 @@ for i = 1:iteration
     % end  
     
     %%% under attack1
-%     percentage = 0.9;
-%     if i == 200
-%         [R,V,ind_i,ind_j] = attack_RV(R_list,V_list,percentage,Graph);
-% %     elseif mod(i,1000) == 0
-% %         [R,V,~,~] = attack_RV(R_list,V_list,percentage,Graph);
-%     end
-%     if ind_i ~= 0 % plot the recovery of specific node 
-%         recover_R = [recover_R, R{ind_i}(ind_j)];
-%     end
+    percentage = 0.9;
+    if i == 200
+        [R,V,ind_i,ind_j] = attack_RV(R_list,V_list,percentage,Graph);
+%     elseif mod(i,1000) == 0
+%         [R,V,~,~] = attack_RV(R_list,V_list,percentage,Graph);
+    end
+    if ind_i ~= 0 % plot the recovery of specific node 
+        recover_R = [recover_R, R{ind_i}(ind_j)];
+    end
 
     %%% under attack2
-    percentage = 0.5;
-    if i == 200
-        [Graph,Arc,R,V,Repu,TP,payoff_one_turn, AgentLabel] = attackNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,percentage);   %%去点
-    end
+    % percentage = 0.5;
+    % if i == 200
+    %     [Graph,Arc,R,V,Repu,TP,payoff_one_turn, AgentLabel] = attackNode(Graph,Arc,R,V,Repu,TP,payoff_one_turn,AgentLabel,percentage);   %%去点
+    % end
 
     
     
@@ -115,10 +115,10 @@ for i = 1:iteration
     
     %��ͼ,ÿʮ�ε�����ͼһ�Σ�ͣ1s
     if mod(i,10) == 1
-%         figure(1)
-%         clf
-%         hist(Dis, CoopNum+1);
-%         figure(2)
+        figure(1)
+        clf
+        hist(Dis, CoopNum+1);
+        figure(2)
         clf
         GraphPoint = CalGarphPoint(Graph); 
         %%%%���Ĳ���%%%%
